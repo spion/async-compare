@@ -1,10 +1,13 @@
 var args = require('optimist').argv;
-var fn = require(args.file);
-var times = args.n;
-var start = Date.now();
 
 var errs = 0;
 var lastErr;
+var times = args.n;
+
+global.asyncTime = args.t || 100;
+
+var fn = require(args.file);
+var start = Date.now();
 
 for (var k = 0, kn = args.n; k < kn; ++k)
     fn('a','b','c', cb);

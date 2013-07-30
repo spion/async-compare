@@ -1,10 +1,11 @@
-
 function dummy(n) {
     return function() {
         var cb = arguments[n - 1];
-        setTimeout(cb, 0);
+        setTimeout(cb, global.asyncTime || 100);
     }
 }
+
+
 
 function queryish() {
     return {
