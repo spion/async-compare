@@ -1,0 +1,28 @@
+{
+  "name": "async-compare",
+  "version": "0.1.0",
+  "description": "Compare the performance and code of multiple async patterns",
+  "main": "perf.js",
+  "dependencies": {
+    "fibby": "~0.1.2",
+    "genny": "~0.2.3",
+    "fibrous": "~0.3.2",
+    "optimist": "~0.6.0",
+    "traceur": "~0.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "generators",
+    "fibers",
+    "promises",
+    "callbacks",
+    "comparison",
+    "compare",
+    "async"
+  ],
+  "author": "spion",
+  "license": "MIT"
+}
