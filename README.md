@@ -17,6 +17,12 @@ selects, some inserts and one update. Lots of mixed sync/async action.
 
 Example solutions for all patterns are located in the `examples` directory
 
+Non-js sorce files begin with src- (they're not checked for performance)
+
+Compiled files are prefixed with dst- (they're not checked for complexity)
+
+All other files are checked for both performance and complexity
+
 Currently the following examples exist:
 
 - genny     - [genny](http://github.com/spion/genny) generator callbacks pattern 
@@ -26,16 +32,12 @@ Currently the following examples exist:
 - original - the original solution, vanilla callbacks, a bit pyramidal
 - flattened - flattened variant of the original via named functions
 - catcher - original with `domain.intercept`-like errors handling micro-library
-
-Planned:
-
 - streamline - using the [streamlinejs](http://github.com/Sage/streamlinejs) CPS transformer
-
 
 ## complexity
 
-Complexity is measured by the number of tokens in the source code (excluding 
-comments)
+Complexity is measured by the number of tokens in the source code found by
+Esprima's lexer (comments excluded)
 
 Run `node complexity.js` to get complexity reports for all files.
 
@@ -70,13 +72,14 @@ take some coding. The main parameters will be:
 
 complexity:
 
-    name          tokens  complexity
-    fibrous.js       331        1.00
-    genny.js         353        1.07
-    catcher.js       406        1.23
-    original.js      435        1.31
-    flattened.js     468        1.41
-    promises.js      481        1.45
+    name                tokens  complexity
+    src-streamline._js     316        1.00
+    fibrous.js             331        1.05
+    genny.js               353        1.12
+    catcher.js             406        1.28
+    original.js            435        1.38
+    flattened.js           468        1.48
+    promises.js            481        1.52
 
 performance:
 
