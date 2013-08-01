@@ -29,7 +29,7 @@ Currently the following examples exist:
 
 Planned:
 
-- streamline - using [http://github.com/Sage/streamlinejs](streamlinejs) underscoe callbacks
+- streamline - using the [streamlinejs](http://github.com/Sage/streamlinejs) CPS transformer
 
 
 ## complexity
