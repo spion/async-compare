@@ -1,3 +1,5 @@
+// --harmony
+
 var genny = require('genny');
 
 module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {

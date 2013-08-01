@@ -27,6 +27,10 @@ var mintokens = s.reduce(function(acc, f) {
     return Math.min(acc, f.tokens);
 }, Number.POSITIVE_INFINITY);
 
+s = s.sort(function(s1, s2) {
+    return s1.tokens - s2.tokens;
+});
+
 console.log('Name   ', '\t', 'Tokens', '\t', 'Complexity (relative)');
 s.forEach(function(f) {
     f.size = f.tokens / mintokens;
