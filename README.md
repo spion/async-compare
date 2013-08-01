@@ -37,18 +37,19 @@ Planned:
 Complexity is measured by the number of tokens in the source code (excluding 
 comments)
 
-Run `node complexity.js` to get a complexity reports for all files.
+Run `node complexity.js` to get complexity reports for all files.
 
 ## performance
 
-All external methods are mocked with setTimeout, to simulate real I/O going on
+All external methods are mocked with setTimeout, to simulate waiting for I/O 
+operations.
 
 Performance is measured by performance.js
  
     node performance.js --n <parallel> --t <miliseconds>
 
 where `n` is the number of parallel executions of the method, while `t` is the
-simulated time each I/O operation should take.
+time each simulated I/O operation should take.
 
 There is an optional parameter `--file <file>` which will only test a single
 file and report any encountered errors in detail.
