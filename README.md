@@ -3,7 +3,7 @@
 This project aims compare various node.js async patterns by their
 
 - complexity (number of necessary tokens)
-- performance when executing in parallel
+- performance when executing in parallel (time and memory)
 - debuggability 
 
 ## example problem
@@ -53,6 +53,8 @@ time each simulated I/O operation should take.
 
 There is an optional parameter `--file <file>` which will only test a single
 file and report any encountered errors in detail.
+
+Both execution time and peak memory usage are reported.
 
 ## debuggability
 
