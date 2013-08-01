@@ -1,5 +1,6 @@
 
 var fs = require('fs');
+var table = require('text-table');
 
 var stats = module.exports = function stats() {
     return fs.readdirSync(__dirname + '/examples').filter(function(f){ 
@@ -31,9 +32,11 @@ s = s.sort(function(s1, s2) {
     return s1.tokens - s2.tokens;
 });
 
-console.log('Name   ', '\t', 'Tokens', '\t', 'Complexity (relative)');
 s.forEach(function(f) {
-    f.size = f.tokens / mintokens;
-    console.log(f.name, '\t', f.tokens, '   \t', f.size.toFixed(2));
+    f.complexity = f.tokens / mintokens;
 });
+
+console.log(table([['name', 'tokens', 'complexity']].concat(
+    s.map(function(f) { return [f.name, f.tokens, f.complexity.toFixed(2)] })
+), {align: ['l','r','r']}));
 

@@ -11,7 +11,8 @@
     "traceur": "~0.0.3",
     "when": "~2.2.1",
     "esprima": "~1.0.3",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "text-table": "~0.1.1"
   },
   "devDependencies": {},
   "scripts": {
