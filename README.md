@@ -90,16 +90,16 @@ performance:
         results for 3000 parallel executions, 5 ms per I/O op
 
         file                  time(ms)  memory(MB)
-        catcher.js                 235  24.90
-        dst-streamline.js          291  46.45
-        dst-genny-traceur.js      2024  74.19
+        original.js                209  22.45
+        flattened.js               210  21.94
+        catcher.js                 220  25.00
+        dst-streamline.js          284  46.37
+        genny.js                   512  57.09
+        dst-genny-traceur.js      2060  75.78
+        promises.js               7671  716.53
         fibrous.js                 N/A  N/A
-        original.js                209  22.80
-        flattened.js               215  22.36
-        genny.js                   500  56.86
-        promises.js               7919  717.11
 
-
+        
 * node v0.10.15
 
   `nvm use 0.10.15; node performance.js -n 3000 -t 5`
@@ -107,12 +107,12 @@ performance:
         results for 3000 parallel executions, 5 ms per I/O op
 
         file                  time(ms)  memory(MB)
-        flattened.js               178  22.27
-        catcher.js                 216  24.90
-        dst-streamline.js          302  38.73
-        dst-genny-traceur.js       568  53.23
-        fibrous.js                8076  139.59
+        flattened.js               187  22.27
+        original.js                194  22.51
+        catcher.js                 212  24.86
+        dst-streamline.js          318  38.99
+        dst-genny-traceur.js       585  53.73
+        fibrous.js                8097  140.55
+        promises.js              11809  721.82
         genny.js                   N/A  N/A
-        original.js                196  22.71
-        promises.js              11912  721.55
 
