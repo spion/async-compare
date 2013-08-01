@@ -21,17 +21,17 @@ Example solutions for all patterns are located in the `examples` directory
 
 Currently the following examples exist:
 
-- genny.js     - [genny](/spion/genny) generator callbacks pattern 
+- genny     - [genny](/spion/genny) generator callbacks pattern 
   (like [suspend](https://github.com/jmar777/suspend))
-- promises.js  - promises to-the-max using [when](/cujojs/when) (needs improvement)
-- fibrous.js   - based on the [goodeggs fibers library fibrous](/goodeggs/fibrous)
-- original.js  - the original solution, vanilla callbacks, a bit pyramidal
-- flattened.js - flattened variant of the original
-- catcher.js   - original with `domain.intercept`-like errors handling micro-library
+- promises - promises to-the-max using [when](/cujojs/when) (needs improvement, may have bugs)
+- fibrous - based on the [goodeggs fibers library fibrous](/goodeggs/fibrous)
+- original - the original solution, vanilla callbacks, a bit pyramidal
+- flattened - flattened variant of the original via named functions
+- catcher - original with `domain.intercept`-like errors handling micro-library
 
 Planned:
 
-- streamline.js - using [/Sage/streamlinejs](streamlinejs) underscore callbacks
+- streamline - using [/Sage/streamlinejs](streamlinejs) underscoe callbacks
 
 
 # complexity
