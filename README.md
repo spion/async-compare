@@ -80,28 +80,34 @@ performance:
 
 * node 0.11.4 --harmony
 
-        results for 1500 parallel executions, 10 ms per I/O op
+  `nvm use 0.11.4; node performance.js -n 3000 -t 5 --harmony`
 
-        file              time(ms)
-        original.js            138
-        flattened.js           142
-        catcher.js             146
-        genny.js               286
-        genny-traceur.js      1112
-        promises.js           2532
-        fibrous.js             N/A
+        results for 3000 parallel executions, 5 ms per I/O op
+
+        file                  time(ms)  memory(MB)
+        catcher.js                 235  24.90
+        dst-streamline.js          291  46.45
+        dst-genny-traceur.js      2024  74.19
+        fibrous.js                 N/A  N/A
+        original.js                209  22.80
+        flattened.js               215  22.36
+        genny.js                   500  56.86
+        promises.js               7919  717.11
+
 
 * node v0.10.15
 
-        results for 1500 parallel executions, 10 ms per I/O op
+  `nvm use 0.10.15; node performance.js -n 3000 -t 5`
 
-        file              time(ms)
-        catcher.js             122
-        flattened.js           124
-        original.js            125
-        genny-traceur.js       332
-        fibrous.js            2369
-        promises.js           4491
-        genny.js               N/A
+        results for 3000 parallel executions, 5 ms per I/O op
 
+        file                  time(ms)  memory(MB)
+        flattened.js               178  22.27
+        catcher.js                 216  24.90
+        dst-streamline.js          302  38.73
+        dst-genny-traceur.js       568  53.23
+        fibrous.js                8076  139.59
+        genny.js                   N/A  N/A
+        original.js                196  22.71
+        promises.js              11912  721.55
 
