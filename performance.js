@@ -68,7 +68,7 @@ else {
         console.log("results for", args.n, "parallel executions,", 
                     args.t, "ms per I/O op");
         res = res.sort(function(r1, r2) { 
-            return r1.data.time - r2.data.time 
+            return parseFloat(r1.data.time) - parseFloat(r2.data.time)
         }).map(function(r) { 
             return [r.file, r.data.time || 'N/A'] 
         });
