@@ -13,17 +13,23 @@ var perf = module.exports = function(args, done) {
     var fn = require(args.file);
     var start = Date.now();
 
+    var memStart = process.memoryUsage().rss;
     for (var k = 0, kn = args.n; k < kn; ++k)
         fn('a','b','c', cb);
+
+    var memMax = process.memoryUsage().rss;
+
 
     function cb (err) {
         if (err) {
             ++errs;
             lastErr = err;
         }
+        memMax = Math.max(process.memoryUsage().rss);
         if (!--times) { 
             done(null, {
                 time: Date.now() - start, 
+                mem: (memMax - memStart)/1024/1024,
                 errors: errs, 
                 lastErr: lastErr 
             });
@@ -49,7 +55,12 @@ else {
 
     var table = require('text-table');
 
-    async.mapSeries(fs.readdirSync(dir), function(f, done) {
+
+    var files = fs.readdirSync(dir).filter(function(f) {
+        return !/^src-/.test(f);
+    });
+
+    async.mapSeries(files, function(f, done) {
         console.log("benchmarking", f);
         var argsFork = [__filename, '--n', args.n, '--t', args.t, '--file', dir + '/' + f];
         if (args.harmony) argsFork.unshift('--harmony');
@@ -70,10 +81,11 @@ else {
         res = res.sort(function(r1, r2) { 
             return parseFloat(r1.data.time) - parseFloat(r2.data.time)
         }).map(function(r) { 
-            return [r.file, r.data.time || 'N/A'] 
+            return [r.file, r.data.time || 'N/A', 
+                r.data.mem ? r.data.mem.toFixed(2) : 'N/A'];
         });
 
-        res = [['file', 'time(ms)']].concat(res)
+        res = [['file', 'time(ms)', 'memory(MB)']].concat(res)
         console.log(table(res, {align: ['l', 'r']}));
 
     });

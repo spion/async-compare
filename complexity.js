@@ -4,7 +4,7 @@ var table = require('text-table');
 
 var stats = module.exports = function stats() {
     return fs.readdirSync(__dirname + '/examples').filter(function(f){ 
-       return !f.match(/traceur/);
+       return !/^dst-/.test(f);
     }).map(function(f) {
         var file = fs.readFileSync('./examples/'+f).toString();
         file = file.replace(/function\s*\*/g, 'function')
