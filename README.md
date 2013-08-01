@@ -13,8 +13,6 @@ somewhat complex CRUD method executed when a user uploads a new document
 to the database. It involves multiple queries to the database, a couple of 
 selects, some inserts and one update. Lots of mixed sync/async action.
 
-In other words, a typical (if somewhat complex) CRUD method.
-
 ## files
 
 Example solutions for all patterns are located in the `examples` directory
