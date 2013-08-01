@@ -88,18 +88,17 @@ performance:
   `nvm use 0.11.4; node performance.js -n 3000 -t 5 --harmony`
 
         results for 3000 parallel executions, 5 ms per I/O op
-
-        file                  time(ms)  memory(MB)
-        original.js                209  22.45
-        flattened.js               210  21.94
-        catcher.js                 220  25.00
-        dst-streamline.js          284  46.37
-        genny.js                   512  57.09
-        dst-genny-traceur.js      2060  75.78
-        promises.js               7671  716.53
-        fibrous.js                 N/A  N/A
-
         
+        file                  time(ms)  memory(MB)
+        original.js                207       22.48
+        flattened.js               209       22.31
+        catcher.js                 220       24.36
+        dst-streamline.js          294       46.49
+        genny.js                   519       57.04
+        dst-genny-traceur.js      2035       74.40
+        promises.js               7896      716.79
+        fibrous.js                 N/A         N/A
+               
 * node v0.10.15
 
   `nvm use 0.10.15; node performance.js -n 3000 -t 5`
@@ -107,12 +106,12 @@ performance:
         results for 3000 parallel executions, 5 ms per I/O op
 
         file                  time(ms)  memory(MB)
-        flattened.js               187  22.27
-        original.js                194  22.51
-        catcher.js                 212  24.86
-        dst-streamline.js          318  38.99
-        dst-genny-traceur.js       585  53.73
-        fibrous.js                8097  140.55
-        promises.js              11809  721.82
-        genny.js                   N/A  N/A
+        flattened.js               183       22.27
+        original.js                191       22.45
+        catcher.js                 209       24.90
+        dst-streamline.js          304       38.99
+        dst-genny-traceur.js       581       53.69
+        fibrous.js                8185      138.56
+        promises.js              11835      721.88
+        genny.js                   N/A         N/A
 
