@@ -8,7 +8,9 @@
     "genny": "~0.2.3",
     "fibrous": "~0.3.2",
     "optimist": "~0.6.0",
-    "traceur": "~0.0.3"
+    "traceur": "~0.0.3",
+    "when": "~2.2.1",
+    "esprima": "~1.0.3"
   },
   "devDependencies": {},
   "scripts": {

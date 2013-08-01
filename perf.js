@@ -1,3 +1,5 @@
+require('./lib/fakes.js');
+
 var args = require('optimist').argv;
 
 var errs = 0;
