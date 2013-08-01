@@ -21,17 +21,17 @@ Example solutions for all patterns are located in the `examples` directory
 
 Currently the following examples exist:
 
-- genny     - [genny](/spion/genny) generator callbacks pattern 
+- genny     - [genny](http://github.com/spion/genny) generator callbacks pattern 
   (like [suspend](https://github.com/jmar777/suspend))
-- promises - promises to-the-max using [when](/cujojs/when) (needs improvement, may have bugs)
-- fibrous - based on the [goodeggs fibers library fibrous](/goodeggs/fibrous)
+- promises - promises to-the-max using [when](http://github.com/cujojs/when) (needs improvement, may have bugs)
+- fibrous - based on the [goodeggs fibers library fibrous](http://github.com/goodeggs/fibrous)
 - original - the original solution, vanilla callbacks, a bit pyramidal
 - flattened - flattened variant of the original via named functions
 - catcher - original with `domain.intercept`-like errors handling micro-library
 
 Planned:
 
-- streamline - using [/Sage/streamlinejs](streamlinejs) underscoe callbacks
+- streamline - using [http://github.com/Sage/streamlinejs](streamlinejs) underscoe callbacks
 
 
 ## complexity
