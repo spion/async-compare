@@ -79,7 +79,7 @@ complexity:
     catcher.js             406        1.28
     original.js            435        1.38
     flattened.js           468        1.48
-    promises.js            481        1.52
+    promises.js            471        1.49
 
 performance:
 
@@ -88,17 +88,18 @@ performance:
   `nvm use 0.11.4; node performance.js -n 3000 -t 5 --harmony`
 
         results for 3000 parallel executions, 5 ms per I/O op
-        
+
         file                  time(ms)  memory(MB)
-        original.js                207       22.48
-        flattened.js               209       22.31
-        catcher.js                 220       24.36
-        dst-streamline.js          294       46.49
-        genny.js                   519       57.04
-        dst-genny-traceur.js      2035       74.40
-        promises.js               7896      716.79
+        original.js                211       22.57
+        flattened.js               217       22.29
+        catcher.js                 229       24.93
+        dst-streamline.js          300       46.33
+        genny.js                   511       57.07
+        dst-genny-traceur.js      2057       74.41
+        promises.js               5953      738.93
         fibrous.js                 N/A         N/A
-               
+                
+              
 * node v0.10.15
 
   `nvm use 0.10.15; node performance.js -n 3000 -t 5`
@@ -106,12 +107,12 @@ performance:
         results for 3000 parallel executions, 5 ms per I/O op
 
         file                  time(ms)  memory(MB)
-        flattened.js               183       22.27
-        original.js                191       22.45
-        catcher.js                 209       24.90
-        dst-streamline.js          304       38.99
-        dst-genny-traceur.js       581       53.69
-        fibrous.js                8185      138.56
-        promises.js              11835      721.88
+        flattened.js               180       22.22
+        original.js                193       22.45
+        catcher.js                 210       24.90
+        dst-streamline.js          270       38.79
+        dst-genny-traceur.js       575       53.54
+        fibrous.js                8212      140.58
+        promises.js              11852      721.78
         genny.js                   N/A         N/A
 

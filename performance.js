@@ -62,31 +62,39 @@ else {
 
     async.mapSeries(files, function(f, done) {
         console.log("benchmarking", f);
+
         var argsFork = [__filename, '--n', args.n, '--t', args.t, '--file', dir + '/' + f];
         if (args.harmony) argsFork.unshift('--harmony');
         var p = cp.spawn(process.execPath, argsFork);
+
         var r = { file: f, data: [] };
         p.stdout.on('data', function(d) { r.data.push(d.toString()); });
         p.stdout.pipe(process.stdout);
         p.stdout.on('end', function(code) {
             try {
                 r.data = JSON.parse(r.data.join(''));
-            } catch(e) {}
+            } catch(e) {
+                r.data = {time: Number.POSITIVE_INFINITY, mem: null};
+            }
             if (code) console.log("Error!");
             done(null, r);
         });
     }, function(err, res) {
+        console.log("");
         console.log("results for", args.n, "parallel executions,", 
                     args.t, "ms per I/O op");
-        res = res.sort(function(r1, r2) { 
+        
+        res.sort(function(r1, r2) { 
             return parseFloat(r1.data.time) - parseFloat(r2.data.time)
-        }).map(function(r) { 
-            return [r.file, r.data.time || 'N/A', 
-                r.data.mem ? r.data.mem.toFixed(2) : 'N/A'];
+        });
+        console.log("");
+        res = res.map(function(r) { 
+            return [r.file, r.data.mem ? r.data.time: 'N/A', 
+                            r.data.mem ? r.data.mem.toFixed(2) : 'N/A'];
         });
 
         res = [['file', 'time(ms)', 'memory(MB)']].concat(res)
-        console.log(table(res, {align: ['l', 'r']}));
+        console.log(table(res, {align: ['l', 'r', 'r']}));
 
     });
 }

@@ -33,15 +33,13 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         var splitPath = idOrPath.split('/');
         var fileName = splitPath[splitPath.length - 1];
         var newId = uuid.v1();
-        return self.createQueryP(idOrPath, p.allObject({
+        p.eventuallyCall(self.createQueryP(idOrPath, p.allObject({
             id: newId,
             userAccountId: userAccount.id,
             type: 'file',
             name: fileName,
             version: versionIdP
-        })).then(function(q) {
-           return q.execWithinP(tx); 
-        }).then(function() {
+        }), 'execWithinP', tx)).then(function() {
             return newId;
         });
     }, function() { 
