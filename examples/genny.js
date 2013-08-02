@@ -41,9 +41,8 @@ module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
         yield File.whereUpdate({id: file.id}, {version: version.id})
             .execWithin(tx, resume.t); 
         yield tx.commit(resume.t);
-    } catch (err) {
+    } finally {
         tx.rollback();
-        throw err;
     }
 });
 

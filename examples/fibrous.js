@@ -39,8 +39,7 @@ module.exports = fibrous(function upload(stream, idOrPath, tag, done) {
         File.whereUpdate({id: file.id}, {version: version.id})
             .sync.execWithin(tx); 
         tx.sync.commit(); 
-    } catch (err) {
+    } finally {
         tx.sync.rollback();
-        throw err;
     }
 });
