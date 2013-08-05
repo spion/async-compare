@@ -77,9 +77,11 @@ complexity:
     fibrous.js             331        1.05
     genny.js               353        1.12
     catcher.js             406        1.28
+    promiseish.js          425        1.34
     original.js            435        1.38
     flattened.js           468        1.48
     promises.js            471        1.49
+
 
 performance:
 
@@ -87,32 +89,38 @@ performance:
 
   `nvm use 0.11.4; node performance.js -n 3000 -t 5 --harmony`
 
-        results for 3000 parallel executions, 5 ms per I/O op
+        results for 3000 parallel executions, 1 ms per I/O op
 
-        file                  time(ms)  memory(MB)
-        original.js                211       22.57
-        flattened.js               217       22.29
-        catcher.js                 229       24.93
-        dst-streamline.js          300       46.33
-        genny.js                   511       57.07
-        dst-genny-traceur.js      2057       74.41
-        promises.js               5953      738.93
-        fibrous.js                 N/A         N/A
-                
+        file                      time(ms)  memory(MB)
+        flattened.js                   166       22.30
+        original.js                    166       22.64
+        catcher.js                     177       24.34
+        dst-streamline.js              246       46.29
+        genny.js                       407       46.44
+        promiseish.js                 1889      246.30
+        dst-genny-traceur.js          1944       74.90
+        promises.js                   5886      738.91
+        dst-streamline-fibers.js       N/A         N/A
+        fibrous.js                     N/A         N/A
+
               
 * node v0.10.15
 
   `nvm use 0.10.15; node performance.js -n 3000 -t 5`
 
-        results for 3000 parallel executions, 5 ms per I/O op
+        results for 3000 parallel executions, 1 ms per I/O op
 
-        file                  time(ms)  memory(MB)
-        flattened.js               180       22.22
-        original.js                193       22.45
-        catcher.js                 210       24.90
-        dst-streamline.js          270       38.79
-        dst-genny-traceur.js       575       53.54
-        fibrous.js                8212      140.58
-        promises.js              11852      721.78
-        genny.js                   N/A         N/A
+        file                      time(ms)  memory(MB)
+        flattened.js                   173       22.45
+        original.js                    186       22.69
+        catcher.js                     202       24.83
+        dst-streamline.js              268       38.71
+        dst-genny-traceur.js           536       41.77
+        promiseish.js                 2821      128.96
+        dst-streamline-fibers.js      6004       74.92
+        fibrous.js                    8150      139.41
+        promises.js                  11887      721.55
+        genny.js                       N/A         N/A
+
+
 

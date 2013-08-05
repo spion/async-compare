@@ -43,7 +43,9 @@ function report(err, res) {
 
 if (args.file) perf(args, function(err, res) {
     report(err, res);
-    if (res.lastErr) throw res.lastErr;
+    if (res.lastErr) {
+        console.log(res.lastErr.stack);
+    }
 });
 
 
@@ -95,6 +97,5 @@ else {
 
         res = [['file', 'time(ms)', 'memory(MB)']].concat(res)
         console.log(table(res, {align: ['l', 'r', 'r']}));
-
     });
 }
