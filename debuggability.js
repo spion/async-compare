@@ -15,8 +15,8 @@ var perf = module.exports = function(args, done) {
 
 
 if (args.file) {
-    perf(args, function(err, res) {
-        console.error(err.stack);
+    perf(args, function(err) {
+        if (err) console.error(err.stack);
     });
 } else {
     var cp    = require('child_process')

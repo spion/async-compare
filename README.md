@@ -164,10 +164,10 @@ These are important for collaboration
         catcher.js                         42        43         1
         flattened.js                       60        61         1
         original.js                        49        50         1
+        genny.js                           37        38         1
         #--- wrong ---#
         promiseish.js                      48        60        12
         dst-genny-traceur.js               37         -         -
-        genny.js                           37         -         -
         promises.js                        49         -         -
 
 
