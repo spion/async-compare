@@ -87,7 +87,7 @@ performance:
 
 * node 0.11.4 --harmony
 
-  `nvm use 0.11.4; node performance.js -n 3000 -t 5 --harmony`
+  `nvm use 0.11.4; node performance.js -n 3000 -t 1 --harmony`
 
         results for 3000 parallel executions, 1 ms per I/O op
 
@@ -106,7 +106,7 @@ performance:
               
 * node v0.10.15
 
-  `nvm use 0.10.15; node performance.js -n 3000 -t 5`
+  `nvm use 0.10.15; node performance.js -n 3000 -t 1`
 
         results for 3000 parallel executions, 1 ms per I/O op
 
