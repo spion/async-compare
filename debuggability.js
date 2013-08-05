@@ -70,6 +70,7 @@ if (args.file) {
 
         var r = { file: f, data: [], line: lineNumber };
 
+        //p.stderr.pipe(process.stdout);
         p.stderr.on('data', function(d) { r.data.push(d.toString()); });
         p.stderr.on('end', function(code) {
             r.data = r.data.join('').split('\n').filter(function(line) {
