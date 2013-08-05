@@ -40,8 +40,8 @@ module.exports = function upload(stream, idOrPath, tag, _) {
             .execWithin(tx, _); 
         tx.commit(_);
     } catch (err) {
-        tx.rollback();
         throw err;
+        tx.rollback();
     }
 };
 

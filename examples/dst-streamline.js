@@ -40,5 +40,4 @@
                     return File.whereUpdate({ id: file.id }, { version: version.id }).execWithin(tx, __cb(_, __frame, 37, 8, function __$upload() {
                       return tx.commit(__cb(_, __frame, 38, 8, __then, true)); }, true)); }, true)); }); }, true)); }, true)); }, true)); }); })(function ___(err, __result) { __tryCatch(_, function __$upload() { if (err) {
 
-            tx.rollback();
             return _(err); } else { _(null, __result); } ; }); }); })(function ___() { __tryCatch(_, _); }); });};
