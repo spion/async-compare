@@ -10,6 +10,7 @@ var perf = module.exports = function(args, done) {
 
     global.asyncTime = args.t || 100;
 
+
     var fn = require(args.file);
     var start = Date.now();
 
@@ -19,37 +20,35 @@ var perf = module.exports = function(args, done) {
 
     var memMax = process.memoryUsage().rss;
 
-
     function cb (err) {
         if (err) {
             ++errs;
             lastErr = err;
         }
-        memMax = Math.max(process.memoryUsage().rss);
+        memMax = Math.max(memMax, process.memoryUsage().rss);
         if (!--times) { 
             done(null, {
                 time: Date.now() - start, 
                 mem: (memMax - memStart)/1024/1024,
                 errors: errs, 
-                lastErr: lastErr 
+                lastErr: lastErr ? lastErr.stack : null
             });
         }
     }
 }
 
+
 function report(err, res) {
     console.log(JSON.stringify(res));
 }
 
-if (args.file) perf(args, function(err, res) {
-    report(err, res);
-    if (res.lastErr) {
-        console.log(res.lastErr.stack);
-    }
-});
-
-
-else {
+if (args.file) {
+    perf(args, function(err, res) {
+        report(err, res);
+        if (res.lastErr) 
+            console.error(res.lastErr);
+    });
+} else {
     var cp    = require('child_process')
     var async = require('async');
     var fs    = require('fs');    
@@ -65,8 +64,12 @@ else {
     async.mapSeries(files, function(f, done) {
         console.log("benchmarking", f);
 
-        var argsFork = [__filename, '--n', args.n, '--t', args.t, '--file', dir + '/' + f];
+        var argsFork = [__filename, 
+            '--n', args.n, 
+            '--t', args.t, 
+            '--file', dir + '/' + f];
         if (args.harmony) argsFork.unshift('--harmony');
+
         var p = cp.spawn(process.execPath, argsFork);
 
         var r = { file: f, data: [] };
@@ -78,7 +81,6 @@ else {
             } catch(e) {
                 r.data = {time: Number.POSITIVE_INFINITY, mem: null};
             }
-            if (code) console.log("Error!");
             done(null, r);
         });
     }, function(err, res) {
@@ -91,8 +93,8 @@ else {
         });
         console.log("");
         res = res.map(function(r) { 
-            return [r.file, r.data.mem ? r.data.time: 'N/A', 
-                            r.data.mem ? r.data.mem.toFixed(2) : 'N/A'];
+            return [r.file, r.data.mem != null ? r.data.time: 'N/A', 
+                            r.data.mem != null ? r.data.mem.toFixed(2) : 'N/A']
         });
 
         res = [['file', 'time(ms)', 'memory(MB)']].concat(res)

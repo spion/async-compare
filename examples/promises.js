@@ -59,6 +59,6 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         return done();
     }, function(err) {
         tx.rollback();
-        return done(err);
+        return done(new Error(err));
     });
 }

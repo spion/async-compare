@@ -3,7 +3,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
     var tx = db.begin();
     function backoff(err) {
         tx.rollback();
-        return done(err);
+        return done(new Error(err));
     }
     blob.put(stream, function (err, blobId) {
         if (err) return done(err);
@@ -46,18 +46,15 @@ module.exports = function upload(stream, idOrPath, tag, done) {
             });
             function afterFileExists(err, fileId) {
                 if (err) return backoff(err);
-                FileVersion.insert({
-                    fileId: fileId,
-                    versionId: version.id
-                }).execWithin(tx, function (err) {
-                    if (err) return backoff(err);
-                    File.whereUpdate({id: fileId}, {
-                        version: version.id
-                    }).execWithin(tx, function (err) {
+                FileVersion.insert({fileId: fileId,versionId: version.id})
+                    .execWithin(tx, function (err) {
                         if (err) return backoff(err);
-                        tx.commit(done);
-                    });
-
+                        File.whereUpdate({id: fileId}, {
+                            version: version.id
+                        }).execWithin(tx, function (err) {
+                            if (err) return backoff(err);
+                            tx.commit(done);
+                        });
                 })
             }
         });

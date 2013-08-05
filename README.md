@@ -28,6 +28,7 @@ Currently the following examples exist:
 - genny     - [genny](http://github.com/spion/genny) generator callbacks pattern 
   (like [suspend](https://github.com/jmar777/suspend))
 - promises - promises to-the-max using [when](http://github.com/cujojs/when) (needs improvement, may have bugs)
+- primiseish - a slightly less agressive promise implementation
 - fibrous - based on the [goodeggs fibers library fibrous](http://github.com/goodeggs/fibrous)
 - original - the original solution, vanilla callbacks, a bit pyramidal
 - flattened - flattened variant of the original via named functions
@@ -60,17 +61,29 @@ Both execution time and peak memory usage are reported.
 
 ## debuggability
 
-Work in progress. Node goes out of its way to deny us the pleasure of running
-non-JS code which means that running `traceur` with source-maps support will
-take some coding. The main parameters will be:
+Work in progress. The main parameters will be:
 
 - does it have source maps (if based on code transformation)
-- does it report all errors (exceptions included)
+- does it report 
+    - errors,
+    - exceptions
+    - async exceptions
 - how complete are the error stack traces
+
+`debuggability.js` measures the distance between the function that creates the 
+error and the actual error in the stack trace.
+
+
+## miscelaneous
+
+These are important for collaboration
+
+- is it available without code transformation
+- will it eventually be available without code transformation
 
 ## current results
 
-complexity:
+### complexity
 
     name                tokens  complexity
     src-streamline._js     316        1.00
@@ -83,7 +96,7 @@ complexity:
     promises.js            471        1.49
 
 
-performance:
+### performance
 
 * node 0.11.4 --harmony
 
@@ -122,5 +135,39 @@ performance:
         promises.js                  11887      721.55
         genny.js                       N/A         N/A
 
+
+### debuggability
+
+* async errors
+
+        file                      actual-line  err-line  distance
+        dst-streamline.js                  36        36         0
+        dst-streamline-fibers.js           35        35         0
+        fibrous.js                         37        38         1
+        original.js                        49        51         2
+        flattened.js                       60        64         4
+        #--- wrong ---#
+        genny.js                           37        44         7 
+        promiseish.js                      48        60        12
+        catcher.js                         42        55        13
+        dst-genny-traceur.js               37         -         -
+        promises.js                        49         -         -
+
+
+
+* exceptions
+
+        file                      actual-line  err-line  distance
+        dst-streamline.js                  36        36         0
+        dst-streamline-fibers.js           35        35         0
+        fibrous.js                         37        38         1
+        catcher.js                         42        43         1
+        flattened.js                       60        61         1
+        original.js                        49        50         1
+        #--- wrong ---#
+        promiseish.js                      48        60        12
+        dst-genny-traceur.js               37         -         -
+        genny.js                           37         -         -
+        promises.js                        49         -         -
 
 

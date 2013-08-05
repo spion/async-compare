@@ -39,22 +39,19 @@ module.exports = function upload(stream, idOrPath, tag, done) {
                 else return afterFileExists(file.id);
             }));
             function afterFileExists(fileId) {
-                FileVersion.insert({
-                    fileId: fileId,
-                    versionId: version.id
-                }).execWithin(tx, c.try(function () {
-                    File.whereUpdate({id: fileId}, {
-                        version: version.id
-                    }).execWithin(tx, c.try(function () {
-                        tx.commit(done);
+                FileVersion.insert({fileId: fileId,versionId: version.id})
+                    .execWithin(tx, c.try(function () {
+                        File.whereUpdate({id: fileId}, {
+                            version: version.id
+                        }).execWithin(tx, c.try(function () {
+                            tx.commit(done);
+                        }));
                     }));
-
-                }));
             }
         }));
     }));
     c.catch(function backoff(err) {
         tx.rollback();
-        return done(err);
+        return done(new Error(err));
     });
 }

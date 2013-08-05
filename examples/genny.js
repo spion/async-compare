@@ -34,14 +34,14 @@ module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
             var q = yield self.createQuery(idOrPath, file, resume.t);
             yield q.execWithin(tx, resume.t);
         }
-        yield FileVersion.insert({fileId: file.id,versionId: version.id})
+        yield FileVersion.insert({fileId: file.id, versionId: version.id})
             .execWithin(tx, resume.t);
         yield File.whereUpdate({id: file.id}, {version: version.id})
             .execWithin(tx, resume.t); 
         yield tx.commit(resume.t);
     } catch (err) {
         tx.rollback();
-        throw err;
+        throw new Error(err);
     }
 });
 

@@ -1,5 +1,3 @@
-// --harmony
-
 module.exports = function upload(stream, idOrPath, tag, _) {
     var blob = blobManager.create(account);
     var tx = db.begin();
@@ -40,8 +38,8 @@ module.exports = function upload(stream, idOrPath, tag, _) {
             .execWithin(tx, _); 
         tx.commit(_);
     } catch (err) {
-        throw err;
         tx.rollback();
+        throw err; //Error(err);
     }
 };
 
