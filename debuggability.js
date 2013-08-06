@@ -1,5 +1,4 @@
 Error.stackTraceLimit = Infinity;
-require('./lib/fakes.js');
 
 var args = require('optimist').argv;
 
@@ -10,13 +9,14 @@ var perf = module.exports = function(args, done) {
     global.testError = args.error;
 
     var fn = require(args.file);
+    require('./lib/fakes.js');
     fn('a','b','c', done);
 }
 
 
 if (args.file) {
     perf(args, function(err) {
-        if (err) console.error(err.stack);
+        if (err) throw err; //console.error(err.stack);
     });
 } else {
     var cp    = require('child_process')

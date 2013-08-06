@@ -41,7 +41,7 @@ module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
         yield tx.commit(resume.t);
     } catch (e) {
         tx.rollback();
-        throw new Error(e);
+        throw e; //new Error(e);
     }
 });
 

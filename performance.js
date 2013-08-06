@@ -1,4 +1,3 @@
-require('./lib/fakes.js');
 
 var args = require('optimist').argv;
 
@@ -12,6 +11,8 @@ var perf = module.exports = function(args, done) {
 
 
     var fn = require(args.file);
+    require('./lib/fakes.js');
+
     var start = Date.now();
 
     var memStart = process.memoryUsage().rss;
