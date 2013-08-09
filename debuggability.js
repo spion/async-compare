@@ -2,6 +2,8 @@ Error.stackTraceLimit = Infinity;
 
 var args = require('optimist').argv;
 
+require('q').longStackSupport = true;
+
 var perf = module.exports = function(args, done) {
     global.asyncTime = args.t || 1;
     global.testThrow = args.throw;
@@ -16,7 +18,10 @@ var perf = module.exports = function(args, done) {
 
 if (args.file) {
     perf(args, function(err) {
-        if (err) throw err; //console.error(err.stack);
+        if (err) { 
+            //throw err; 
+            console.error(err.stack);
+        }
     });
 } else {
     var cp    = require('child_process')
@@ -46,7 +51,7 @@ if (args.file) {
     }
 
     async.mapSeries(files, function(f, done) {
-        console.log("testing", f);
+        console.error("testing", f);
 
         var argsFork = [__filename, 
             '--file', dir + '/' + f];
@@ -64,13 +69,13 @@ if (args.file) {
             .map(function(l, k) { 
                 return { 
                     contained: l.indexOf('FileVersion.insert') >= 0, 
-                    line: k + 1
+                    line: k + 2
                 };
             }).filter(function(l) { return l.contained; })[0].line;
 
         var r = { file: f, data: [], line: lineNumber };
 
-        //p.stderr.pipe(process.stdout);
+        p.stderr.pipe(process.stderr);
         p.stderr.on('data', function(d) { r.data.push(d.toString()); });
         p.stderr.on('end', function(code) {
             r.data = r.data.join('').split('\n').filter(function(line) {
@@ -98,7 +103,7 @@ if (args.file) {
                 r.data ? r.data.distance : '-'];
                 //r.data ? 'yes ' + r.data.content :'no'];
         })
-        res = [['file', 'actual-line', 'err-line', 'distance']].concat(res)
+        res = [['file', 'actual-line', 'rep-line', 'distance']].concat(res)
         console.log(table(res, {align: ['l','r','r','r']}));
     });
 }

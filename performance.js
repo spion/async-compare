@@ -1,6 +1,10 @@
 
 var args = require('optimist').argv;
 
+var util = require('util');
+
+var path = require('path');
+
 var perf = module.exports = function(args, done) {
 
     var errs = 0;
@@ -58,17 +62,70 @@ if (args.file) {
     var table = require('text-table');
 
 
-    var files = fs.readdirSync(dir).filter(function(f) {
-        return !/^src-/.test(f);
+    var files = args._.filter(function(f) {
+        return !/^src-/.test(path.basename(f));
     });
 
+    if (args.n)
+        measure(files, args.n, args.t, function(err, res) {
+            console.log("");
+            console.log("results for", args.n, "parallel executions,", 
+                        args.t, "ms per I/O op");
+
+            res.sort(function(r1, r2) { 
+                return parseFloat(r1.data.time) - parseFloat(r2.data.time)
+            });
+            console.log("");
+            res = res.map(function(r) { 
+                return [path.basename(r.file), 
+                    r.data.mem != null ? r.data.time: 'N/A', 
+                    r.data.mem != null ? r.data.mem.toFixed(2) : 'N/A']
+            });
+
+            res = [['file', 'time(ms)', 'memory(MB)']].concat(res)
+            console.log(table(res, {align: ['l', 'r', 'r']}));
+
+        });
+    else
+        async.mapSeries([100,500,1000,1500,2000], function(n, done) {
+            console.log("--- n =", n, "---");
+            measure(files, n, args.t || n * args.dt, function(err, res) {
+                return done(null, {n: n, res: res});
+            });
+        }, function(err, all) {
+            //structure: 
+            //[{n: n, res: [{ file: file, data: {time: time, mem: mem}}]}]
+            var times = [], mems = [];
+            for (var k = 0; k < all[0].res.length; ++k) {
+                var file = all[0].res[k].file;
+                var memf  = {label: path.basename(file), data: []};
+                var timef = {label: path.basename(file), data: []};
+                for (var n = 0; n < all.length; ++n) {
+                    var requests = all[n].n,
+                        time = all[n].res[k].data.time,
+                        mem = all[n].res[k].data.mem;
+                    timef.data.push([requests, time]);
+                    memf.data.push( [requests, mem]);
+                }
+                times.push(timef);
+                mems.push(memf);
+            }
+            console.log("--------- time ---------");
+            console.log(util.inspect(times, false, 10))
+            console.log("--------- mem ----------");
+            console.log(util.inspect(mems,  false, 10))
+        })
+}
+
+
+function measure(files, requests, time, callback) {
     async.mapSeries(files, function(f, done) {
         console.log("benchmarking", f);
 
         var argsFork = [__filename, 
-            '--n', args.n, 
-            '--t', args.t, 
-            '--file', dir + '/' + f];
+            '--n', requests, 
+            '--t', time, 
+            '--file', f];
         if (args.harmony) argsFork.unshift('--harmony');
 
         var p = cp.spawn(process.execPath, argsFork);
@@ -84,21 +141,5 @@ if (args.file) {
             }
             done(null, r);
         });
-    }, function(err, res) {
-        console.log("");
-        console.log("results for", args.n, "parallel executions,", 
-                    args.t, "ms per I/O op");
-        
-        res.sort(function(r1, r2) { 
-            return parseFloat(r1.data.time) - parseFloat(r2.data.time)
-        });
-        console.log("");
-        res = res.map(function(r) { 
-            return [r.file, r.data.mem != null ? r.data.time: 'N/A', 
-                            r.data.mem != null ? r.data.mem.toFixed(2) : 'N/A']
-        });
-
-        res = [['file', 'time(ms)', 'memory(MB)']].concat(res)
-        console.log(table(res, {align: ['l', 'r', 'r']}));
-    });
+    }, callback);
 }

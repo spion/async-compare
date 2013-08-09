@@ -17,7 +17,8 @@
     "fibers": "~1.0.1",
     "long-stack-traces": "~0.1.2",
     "q": "~0.9.6",
-    "galaxy-stack": "~0.1.0"
+    "galaxy-stack": "~0.1.0",
+    "suspend": "~0.3.0"
   },
   "devDependencies": {},
   "scripts": {

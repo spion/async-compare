@@ -1,4 +1,5 @@
 global.useQ = true;
+
 var q = require('q');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
@@ -56,6 +57,6 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         return done();
     }, function(err) {
         tx.rollback();
-        return done(new Error(err));
+        return done(err);
     });
 }
