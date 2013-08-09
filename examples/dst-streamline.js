@@ -10,14 +10,10 @@
                 date: new Date(),
                 blobId: blobId,
                 creatorId: userAccount.id,
-                previousId: previousId,
-                mergedId: null,
-                mergeType: "mine",
-                comment: "",
-                tag: tag };
+                previousId: previousId };
 
               version.id = Version.createHash(version);
-              return Version.insert(version).execWithin(tx, __cb(_, __frame, 19, 8, function __$upload() { return (function __$upload(__then) {
+              return Version.insert(version).execWithin(tx, __cb(_, __frame, 15, 8, function __$upload() { return (function __$upload(__then) {
                   if (!file) {
                     splitPath = idOrPath.split("/");
                     fileName = splitPath[(splitPath.length - 1)];
@@ -25,18 +21,17 @@
                     file = {
                       id: newId,
                       userAccountId: userAccount.id,
-                      type: "file",
                       name: fileName,
                       version: version.id };
 
-                    return self.createQuery(idOrPath, file, __cb(_, __frame, 31, 21, function ___(__0, __3) { q = __3;
-                      return q.execWithin(tx, __cb(_, __frame, 32, 13, __then, true)); }, true)); } else { __then(); } ; })(function __$upload() {
+                    return self.createQuery(idOrPath, file, __cb(_, __frame, 26, 21, function ___(__0, __3) { q = __3;
+                      return q.execWithin(tx, __cb(_, __frame, 27, 13, __then, true)); }, true)); } else { __then(); } ; })(function __$upload() {
 
 
-                  return FileVersion.insert({ fileId: file.id, versionId: version.id }).execWithin(tx, __cb(_, __frame, 35, 8, function __$upload() {
+                  return FileVersion.insert({ fileId: file.id, versionId: version.id }).execWithin(tx, __cb(_, __frame, 30, 8, function __$upload() {
 
-                    return File.whereUpdate({ id: file.id }, { version: version.id }).execWithin(tx, __cb(_, __frame, 37, 8, function __$upload() {
-                      return tx.commit(__cb(_, __frame, 38, 8, __then, true)); }, true)); }, true)); }); }, true)); }, true)); }, true)); }); })(function ___(err, __result) { __tryCatch(_, function __$upload() { if (err) {
+                    return File.whereUpdate({ id: file.id }, { version: version.id }).execWithin(tx, __cb(_, __frame, 32, 8, function __$upload() {
+                      return tx.commit(__cb(_, __frame, 33, 8, __then, true)); }, true)); }, true)); }); }, true)); }, true)); }, true)); }); })(function ___(err, __result) { __tryCatch(_, function __$upload() { if (err) {
 
             tx.rollback();
             return _(err); } else { _(null, __result); } ; }); }); })(function ___() { __tryCatch(_, _); }); });};

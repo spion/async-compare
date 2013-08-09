@@ -13,10 +13,6 @@ module.exports = fibrous(function upload(stream, idOrPath, tag, done) {
             blobId: blobId,
             creatorId: userAccount.id,
             previousId: previousId,
-            mergedId: null,
-            mergeType: 'mine',
-            comment: '',
-            tag: tag
         };
         version.id = Version.createHash(version);
         Version.insert(version).sync.execWithin(tx);
@@ -27,7 +23,6 @@ module.exports = fibrous(function upload(stream, idOrPath, tag, done) {
             var file = {
                 id: newId,
                 userAccountId: userAccount.id,
-                type: 'file',
                 name: fileName,
                 version: version.id
             }

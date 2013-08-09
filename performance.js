@@ -13,6 +13,8 @@ var perf = module.exports = function(args, done) {
 
     global.asyncTime = args.t || 100;
 
+    global.longStackSupport = require('q').longStackSupport 
+        = args.longStackSupport || false;
 
     var fn = require(args.file);
     require('./lib/fakes.js');
@@ -89,7 +91,7 @@ if (args.file) {
     else
         async.mapSeries([100,500,1000,1500,2000], function(n, done) {
             console.log("--- n =", n, "---");
-            measure(files, n, args.t || n * args.dt, function(err, res) {
+            measure(files, n, args.t || n * args.nt, function(err, res) {
                 return done(null, {n: n, res: res});
             });
         }, function(err, all) {

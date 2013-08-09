@@ -11,10 +11,6 @@
             blobId: blobId,
             creatorId: userAccount.id,
             previousId: previousId,
-            mergedId: null,
-            mergeType: 'mine',
-            comment: '',
-            tag: tag
         };
         version.id = Version.createHash(version);
         fstreamline__.invoke(Version.insert(version), "execWithin", [tx, _], 1);
@@ -25,7 +21,6 @@
             var file = {
                 id: newId,
                 userAccountId: userAccount.id,
-                type: 'file',
                 name: fileName,
                 version: version.id
             };

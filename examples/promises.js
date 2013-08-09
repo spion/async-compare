@@ -15,10 +15,6 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         blobId: blobIdP,
         creatorId: userAccount.id,
         previousId: previousIdP,
-        mergedId: null,
-        mergeType: 'mine',
-        comment: '',
-        tag: tag
     });
     versionP = p.set(versionP, p.allObject({
         id: fn.call(Version.createHash, versionP)
@@ -36,7 +32,6 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         p.eventuallyCall(self.createQueryP(idOrPath, p.allObject({
             id: newId,
             userAccountId: userAccount.id,
-            type: 'file',
             name: fileName,
             version: versionIdP
         }), 'execWithinP', tx)).then(function() {

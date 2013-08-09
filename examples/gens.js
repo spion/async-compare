@@ -24,7 +24,7 @@ var uploadTransaction = async(function* upload(tx, stream, idOrPath, tag) {
         previousId: previousId
     }
     version.id = Version.createHash(version)
-    yield Version.insert.bind(Version, version)
+    yield Version.insert(version).exec.bind(Version);
     var fileId = results.file.id
     if (!results.file) {
         var splitPath = idOrPath.split("/")
@@ -38,7 +38,6 @@ var uploadTransaction = async(function* upload(tx, stream, idOrPath, tag) {
         })
         yield query.execWithin.bind(query, tx)
     }
-
     yield parallel({
         version: FileVersion.insert({ fileId: fileId, versionId: version.id })
             .execWithin.bind(null, tx),

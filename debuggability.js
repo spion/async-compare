@@ -2,7 +2,7 @@ Error.stackTraceLimit = Infinity;
 
 var args = require('optimist').argv;
 
-require('q').longStackSupport = true;
+global.longStackSupport = require('q').longStackSupport = true;
 
 var perf = module.exports = function(args, done) {
     global.asyncTime = args.t || 1;
@@ -20,6 +20,7 @@ if (args.file) {
     perf(args, function(err) {
         if (err) { 
             //throw err; 
+            console.log(err);
             console.error(err.stack);
         }
     });

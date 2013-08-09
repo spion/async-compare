@@ -29,7 +29,8 @@ Currently the following examples exist:
   (like [suspend](https://github.com/jmar777/suspend))
 - promises - promises to-the-max using [when](http://github.com/cujojs/when) (needs improvement, may have bugs)
 - primiseish - a slightly less agressive promise implementation
-- fibrous - based on the [goodeggs fibers library fibrous](http://github.com/goodeggs/fibrous)
+- qasync - generators, promises and Q.async
+- fibrous - using fibers with [fibrous](http://github.com/goodeggs/fibrous)
 - original - the original solution, vanilla callbacks, a bit pyramidal
 - flattened - flattened variant of the original via named functions
 - catcher - original with `domain.intercept`-like errors handling micro-library
@@ -41,6 +42,21 @@ Complexity is measured by the number of tokens in the source code found by
 Esprima's lexer (comments excluded)
 
 Run `node complexity.js` to get complexity reports for all files.
+
+Current results:
+
+    name                tokens  complexity
+    src-streamline._js     316        1.00
+    fibrous.js             331        1.05
+    qasync.js              334        1.06
+    genny.js               353        1.12
+    catcher.js             410        1.30
+    promiseishQ.js         420        1.33
+    promiseish.js          429        1.36
+    original.js            439        1.39
+    flattened.js           472        1.49
+    promises.js            475        1.50
+
 
 ## performance
 
@@ -59,6 +75,52 @@ file and report any encountered errors in detail.
 
 Both execution time and peak memory usage are reported.
 
+Current results:
+
+* node 0.11.5 --harmony
+
+  `nvm use 0.11.5; node performance.js -n 3000 -t 1 --harmony`
+
+        results for 3000 parallel executions, 1 ms per I/O op
+
+        file                      time(ms)  memory(MB)
+        flattened.js                   181       22.34
+        original.js                    186       22.61
+        catcher.js                     202       25.21
+        dst-streamline.js              303       39.42
+        genny.js                       478       46.49
+        dst-genny-traceur.js           603       49.55
+        promiseish.js                 2305      248.91
+        qasync.js                     3156      216.35
+        promiseishQ.js                3725      241.74
+        dst-qasync-traceur.js         4456      228.59
+        promises.js                   9539      717.49
+        dst-streamline-fibers.js       N/A         N/A
+        fibrous.js                     N/A         N/A
+
+              
+* node v0.10.15
+
+  `nvm use 0.10.15; node performance.js -n 3000 -t 1`
+
+        results for 3000 parallel executions, 1 ms per I/O op
+
+        file                      time(ms)  memory(MB)
+        flattened.js                   169       22.42
+        original.js                    193       23.95
+        catcher.js                     215       26.04
+        dst-streamline.js              269       39.63
+        dst-genny-traceur.js           595       51.80
+        promiseish.js                 2859      136.97
+        promiseishQ.js                3426      155.78
+        dst-streamline-fibers.js      6010       86.61
+        fibrous.js                    8109      163.52
+        promises.js                  11863      722.59
+        genny.js                       N/A         N/A
+        dst-qasync-traceur.js          N/A         N/A
+        qasync.js                      N/A         N/A
+
+
 ## debuggability
 
 Work in progress. The main parameters will be:
@@ -73,70 +135,7 @@ Work in progress. The main parameters will be:
 `debuggability.js` measures the distance between the function that creates the 
 error and the actual error in the stack trace.
 
-
-## miscelaneous
-
-These are important for collaboration
-
-- is it available without code transformation
-- will it eventually be available without code transformation
-
-## current results
-
-### complexity
-
-    name                tokens  complexity
-    src-streamline._js     316        1.00
-    fibrous.js             331        1.05
-    genny.js               353        1.12
-    catcher.js             406        1.28
-    promiseish.js          425        1.34
-    original.js            435        1.38
-    flattened.js           468        1.48
-    promises.js            471        1.49
-
-
-### performance
-
-* node 0.11.4 --harmony
-
-  `nvm use 0.11.4; node performance.js -n 3000 -t 1 --harmony`
-
-        results for 3000 parallel executions, 1 ms per I/O op
-
-        file                      time(ms)  memory(MB)
-        flattened.js                   166       22.30
-        original.js                    166       22.64
-        catcher.js                     177       24.34
-        dst-streamline.js              246       46.29
-        genny.js                       407       46.44
-        promiseish.js                 1889      246.30
-        dst-genny-traceur.js          1944       74.90
-        promises.js                   5886      738.91
-        dst-streamline-fibers.js       N/A         N/A
-        fibrous.js                     N/A         N/A
-
-              
-* node v0.10.15
-
-  `nvm use 0.10.15; node performance.js -n 3000 -t 1`
-
-        results for 3000 parallel executions, 1 ms per I/O op
-
-        file                      time(ms)  memory(MB)
-        flattened.js                   173       22.45
-        original.js                    186       22.69
-        catcher.js                     202       24.83
-        dst-streamline.js              268       38.71
-        dst-genny-traceur.js           536       41.77
-        promiseish.js                 2821      128.96
-        dst-streamline-fibers.js      6004       74.92
-        fibrous.js                    8150      139.41
-        promises.js                  11887      721.55
-        genny.js                       N/A         N/A
-
-
-### debuggability
+Current results:
 
 * async errors
 
@@ -153,8 +152,6 @@ These are important for collaboration
         dst-genny-traceur.js               37         -         -
         promises.js                        49         -         -
 
-
-
 * exceptions
 
         file                      actual-line  err-line  distance
@@ -169,5 +166,14 @@ These are important for collaboration
         promiseish.js                      48        60        12
         dst-genny-traceur.js               37         -         -
         promises.js                        49         -         -
+
+
+## misc 
+
+These are factors potentially important for collaboration
+
+- does it require native modules (2)
+- does it require code transformation (1) 
+- will it become available without code transformation (1)
 
 

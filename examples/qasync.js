@@ -15,10 +15,6 @@ module.exports = function upload(stream, idOrPath, tag, done) {
                 blobId: blobId,
                 creatorId: userAccount.id,
                 previousId: previousId,
-                mergedId: null,
-                mergeType: 'mine',
-                comment: '',
-                tag: tag
             };
             version.id = Version.createHash(version);
             yield Version.insert(version).execWithinP(tx);
@@ -28,7 +24,6 @@ module.exports = function upload(stream, idOrPath, tag, done) {
                 file = {
                     id: uuid.v1(),
                     userAccountId: userAccount.id,
-                    type: 'file',
                     name: fileName,
                     version: version.id
                 }
