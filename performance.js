@@ -11,7 +11,7 @@ var perf = module.exports = function(args, done) {
     var lastErr;
     var times = args.n;
 
-    global.asyncTime = args.t || 100;
+    global.asyncTime = args.t;
 
     global.longStackSupport = require('q').longStackSupport 
         = args.longStackSupport || false;
@@ -91,7 +91,7 @@ if (args.file) {
     else
         async.mapSeries([100,500,1000,1500,2000], function(n, done) {
             console.log("--- n =", n, "---");
-            measure(files, n, args.t || n * args.nt, function(err, res) {
+            measure(files, n, args.t != null ? args.t : n * args.nt, function(err, res) {
                 return done(null, {n: n, res: res});
             });
         }, function(err, all) {
@@ -100,6 +100,9 @@ if (args.file) {
             var times = [], mems = [];
             for (var k = 0; k < all[0].res.length; ++k) {
                 var file = all[0].res[k].file;
+                // skip missing
+                if (all[0].res[k].data.missing) 
+                    continue;
                 var memf  = {label: path.basename(file), data: []};
                 var timef = {label: path.basename(file), data: []};
                 for (var n = 0; n < all.length; ++n) {
@@ -108,7 +111,7 @@ if (args.file) {
                         mem = all[n].res[k].data.mem;
                     timef.data.push([requests, time]);
                     memf.data.push( [requests, mem]);
-                }
+                }                
                 times.push(timef);
                 mems.push(memf);
             }
@@ -139,7 +142,8 @@ function measure(files, requests, time, callback) {
             try {
                 r.data = JSON.parse(r.data.join(''));
             } catch(e) {
-                r.data = {time: Number.POSITIVE_INFINITY, mem: null};
+                r.data = {time: Number.POSITIVE_INFINITY, mem: null, 
+                    missing: true};
             }
             done(null, r);
         });

@@ -19,7 +19,8 @@
     "q": "~0.9.6",
     "galaxy-stack": "~0.1.0",
     "suspend": "~0.3.0",
-    "gens": "~0.2.5"
+    "gens": "~0.2.5",
+    "co": "~1.5.1"
   },
   "devDependencies": {},
   "scripts": {
