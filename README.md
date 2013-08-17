@@ -65,7 +65,7 @@ operations.
 
 Performance is measured by performance.js
  
-    node performance.js --n <parallel> --t <miliseconds>
+    node performance.js --n <parallel> --t <miliseconds> ./examples/*.js
 
 where `n` is the number of parallel executions of the method, while `t` is the
 time each simulated I/O operation should take.
@@ -75,11 +75,11 @@ file and report any encountered errors in detail.
 
 Both execution time and peak memory usage are reported.
 
-Current results:
+Example results (slightly out of date):
 
 * node 0.11.5 --harmony
 
-  `nvm use 0.11.5; node performance.js -n 3000 -t 1 --harmony`
+  `nvm use 0.11.5; node performance.js -n 3000 -t 1 --harmony ./examples/*.js`
 
         results for 3000 parallel executions, 1 ms per I/O op
 
@@ -101,7 +101,7 @@ Current results:
               
 * node v0.10.15
 
-  `nvm use 0.10.15; node performance.js -n 3000 -t 1`
+  `nvm use 0.10.15; node performance.js -n 3000 -t 1 ./examples/*.js`
 
         results for 3000 parallel executions, 1 ms per I/O op
 
@@ -123,17 +123,29 @@ Current results:
 
 ## debuggability
 
-Work in progress. The main parameters will be:
-
-- does it have source maps (if based on code transformation)
-- does it report 
-    - errors,
-    - exceptions
-    - async exceptions
-- how complete are the error stack traces
 
 `debuggability.js` measures the distance between the function that creates the 
-error and the actual error in the stack trace.
+error and the actual error in the stack trace. Reports "-" at places where
+the stack trace is completely missing the original file.
+
+To check all examples for async errors:
+
+```
+node debuggability.js --harmony --error 
+```
+
+and for exceptions:
+
+```
+node debuggability.js --harmony --throw
+```
+
+and finally for exceptions inside async calls (most things can't handle this):
+
+
+```
+node debuggability.js --harmony --athrow
+```
 
 Current results:
 
@@ -170,7 +182,8 @@ Current results:
 
 ## misc 
 
-These are factors potentially important for collaboration
+These are factors potentially important for collaboration which could
+be added as points to arrive at a final score:
 
 - does it require native modules (2)
 - does it require code transformation (1) 
