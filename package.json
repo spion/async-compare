@@ -20,7 +20,8 @@
     "galaxy-stack": "~0.1.0",
     "suspend": "~0.3.0",
     "gens": "~0.2.5",
-    "co": "~1.5.1"
+    "co": "~1.5.1",
+    "rx": "~2.1.10"
   },
   "devDependencies": {},
   "scripts": {
