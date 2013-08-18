@@ -1,20 +1,31 @@
 var Rx = require('rx');
 
+// The idea here is that whomever calls "upload"
+// receives an Observable, to which they subscribe.
+
 module.exports = function upload(stream, idOrPath, tag, done) {
     
     var blob = blobManager.create(account);
     var tx = db.begin();
     
-    blobPutAsObs(blob, stream)
+    return blobPutAsObs(blob, stream)
         .selectMany(selectFile(this, idOrPath))
+        // Handle the early error case where we don't need
+        // to roll any DB actions back.
+        .doAction(identity, done)
         .selectMany(insertVersion(this, tx, idOrPath, tag))
         .selectMany(insertFile(tx))
         .selectMany(updateFileVersion(tx))
-        .selectMany(commit)
-        .subscribe(function(commitResultArgs) {
-            done.apply(null, commitResultArgs);
-        });
+        .selectMany(commitDBAction)
+        .doAction(identity, rollBack);
+    
+    function rollBack(err) {
+        tx.rollback();
+        done(new Error(err));
+    }
 }
+
+function identity() { return arguments[0]; };
 
 function blobPutAsObs(blob, stream) {
     
@@ -180,10 +191,14 @@ function updateFileVersion(tx) {
     }
 }
 
-function commit(tx) {
+function commitDBAction(tx) {
     
     return Rx.Observable.create(function(observer) {
         
+        // Not sure of the commit callback API, so
+        // just pass whatever arguments back as the
+        // next message and let the subscriber apply
+        // them to the done callback.
         tx.commit(function() {
             
             observer.onNext(arguments);
