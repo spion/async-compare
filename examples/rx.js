@@ -1,31 +1,36 @@
 var Rx = require('rx');
 
-// The idea here is that whomever calls "upload"
-// receives an Observable, to which they subscribe.
-
 module.exports = function upload(stream, idOrPath, tag, done) {
     
-    var blob = blobManager.create(account);
-    var tx = db.begin();
+    var blob = blobManager.create(account),
+        tx = db.begin(),
+        shouldRollback = false;
     
-    return blobPutAsObs(blob, stream)
+    blobPutAsObs(blob, stream)
         .selectMany(selectFile(this, idOrPath))
-        // Handle the early error case where we don't need
-        // to roll any DB actions back.
-        .doAction(identity, done)
+        .doAction(function() { shouldRollback = true; })
         .selectMany(insertVersion(this, tx, idOrPath, tag))
         .selectMany(insertFile(tx))
         .selectMany(updateFileVersion(tx))
         .selectMany(commitDBAction)
-        .doAction(identity, rollBack);
+        .subscribe(
+            onSuccessfulCommit,
+            onCommitError
+        );
     
-    function rollBack(err) {
-        tx.rollback();
-        done(new Error(err));
+    function onSuccessfulCommit(commitResultArgs) {
+        done.apply(null, commitResultArgs);
+    };
+    
+    function onCommitError(err) {
+        if(shouldRollback) {
+            tx.rollback();
+            done(new Error(err));
+        } else {
+            done(err);
+        }
     }
 }
-
-function identity() { return arguments[0]; };
 
 function blobPutAsObs(blob, stream) {
     
@@ -62,10 +67,9 @@ function insertVersion(self, tx, idOrPath, tag) {
     
     return function(blobIdAndFile) {
         
-        var blobId = blobIdAndFile[0];
-        var iFile  = blobIdAndFile[1];
-        
-        var previousId = iFile ? iFile.version : null,
+        var blobId = blobIdAndFile[0],
+            iFile  = blobIdAndFile[1],
+            previousId = iFile ? iFile.version : null,
             version = {
                 userAccountId: userAccount.id,
                 date: new Date(),
@@ -76,19 +80,16 @@ function insertVersion(self, tx, idOrPath, tag) {
                 mergeType: 'mine',
                 comment: '',
                 tag: tag
-            };
+            },
+            slashIndex = idOrPath.lastIndexOf('/'),
+            fileName = idOrPath.substring(slashIndex),
+            newId = uuid.v1(),
+            createFile = createFileAsObs(self, fileName, newId),
+            doQuery = executeQuery(tx, newId),
+            createFileObs = createFile.selectMany(doQuery),
+            fileExistsObs = Rx.Observable.returnValue(newId);
         
         version.id = Version.createHash(version);
-        
-        var slashIndex = idOrPath.lastIndexOf('/');
-        var fileName = idOrPath.substring(slashIndex);
-        var newId = uuid.v1();
-        
-        var createFile = createFileAsObs(self, fileName, newId);
-        var doQuery = executeQuery(tx, newId);
-        
-        var createFileObs = createFile.selectMany(doQuery);
-        var fileExistsObs = Rx.Observable.returnValue(newId);
         
         return Rx.Observable.ifThen(
             function() { return !file; },
@@ -128,6 +129,7 @@ function executeQuery(tx, newId) {
     return function(q) {
         
         return Rx.Observable.create(function(observer) {
+            
             q.execWithin(tx, function(err) {
                 
                 if(err) return observer.onError(err);
@@ -143,15 +145,14 @@ function insertFile(tx) {
     
     return function(fileIdAndVersion) {
         
-        var fileId    = fileIdAndVersion[0];
-        var versionId = fileIdAndVersion[1];
-        
-        return Rx.Observable.create(function(observer) {
-            
-            var insert = {
+        var fileId    = fileIdAndVersion[0],
+            versionId = fileIdAndVersion[1],
+            insert = {
                 fileId: fileId,
                 versionId: versionId
             };
+        
+        return Rx.Observable.create(function(observer) {
             
             FileVersion
                 .insert(insert)
@@ -170,13 +171,12 @@ function updateFileVersion(tx) {
     
     return function(fileIdAndVersion) {
         
-        var fileId    = fileIdAndVersion[0];
-        var versionId = fileIdAndVersion[1];
+        var fileId    = fileIdAndVersion[0],
+            versionId = fileIdAndVersion[1],
+            file      = { id: fileId },
+            version   = { version: versionId };
         
         return Rx.Observable.create(function(observer) {
-            
-            var file = {id: fileId},
-                version = { version: versionId };
             
             File
                 .whereUpdate(file, version)
