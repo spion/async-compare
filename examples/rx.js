@@ -152,8 +152,7 @@ function insertFile(tx) {
             };
         return Rx.Observable.create(function(observer) {
             
-            FileVersion
-                .insert(insert)
+            FileVersion.insert(insert)
                 .execWithin(tx, function(err) {
                     
                     if(err) return observer.onError(err);
