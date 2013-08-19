@@ -7,9 +7,9 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         shouldRollback = false;
     
     blobPutAsObs(blob, stream)
-        .selectMany(selectFile(this, idOrPath))
+        .selectMany(selectFile(idOrPath))
         .doAction(function() { shouldRollback = true; })
-        .selectMany(insertVersion(this, tx, idOrPath, tag))
+        .selectMany(insertVersion(tx, idOrPath, tag))
         .selectMany(insertFile(tx))
         .selectMany(updateFileVersion(tx))
         .selectMany(commitDBAction)
@@ -23,19 +23,15 @@ module.exports = function upload(stream, idOrPath, tag, done) {
     };
     
     function onCommitError(err) {
-        if(shouldRollback) {
+        if(shouldRollback)
             tx.rollback();
-            done(new Error(err));
-        } else {
-            done(err);
-        }
+        done(err); 
     }
 }
 
 function blobPutAsObs(blob, stream) {
     
     return Rx.Observable.create(function(observer) {
-        
         blob.put(stream, function(err, iBlobId) {
             
             if(err) return observer.onError(err);
@@ -46,14 +42,14 @@ function blobPutAsObs(blob, stream) {
     });
 }
 
-function selectFile(self, idOrPath) {
+function selectFile(idOrPath) {
     
     return function(blobId) {
         
         return Rx.Observable.create(function(observer) {
             
             self.byUuidOrPath(idOrPath).get(function(err, iFile) {
-                
+                       
                 if(err) return observer.onError(err);
                 
                 observer.onNext([blobId, iFile]);
@@ -63,10 +59,11 @@ function selectFile(self, idOrPath) {
     }
 }
 
-function insertVersion(self, tx, idOrPath, tag) {
+function insertVersion(tx, idOrPath, tag) {
     
     return function(blobIdAndFile) {
         
+
         var blobId = blobIdAndFile[0],
             iFile  = blobIdAndFile[1],
             previousId = iFile ? iFile.version : null,
@@ -84,7 +81,8 @@ function insertVersion(self, tx, idOrPath, tag) {
             slashIndex = idOrPath.lastIndexOf('/'),
             fileName = idOrPath.substring(slashIndex),
             newId = uuid.v1(),
-            createFile = createFileAsObs(self, fileName, newId),
+            createFile = createFileAsObs(self, fileName, newId, version, 
+                                         idOrPath),
             doQuery = executeQuery(tx, newId),
             createFileObs = createFile.selectMany(doQuery),
             fileExistsObs = Rx.Observable.returnValue(newId);
@@ -92,7 +90,7 @@ function insertVersion(self, tx, idOrPath, tag) {
         version.id = Version.createHash(version);
         
         return Rx.Observable.ifThen(
-            function() { return !file; },
+            function() { return !iFile; },
             createFileObs,
             fileExistsObs
         )
@@ -102,9 +100,10 @@ function insertVersion(self, tx, idOrPath, tag) {
     }
 }
 
-function createFileAsObs(self, fileName, newId) {
+function createFileAsObs(self, fileName, newId, version, idOrPath) {
         
     return Rx.Observable.create(function(observer) {
+        
         
         var query = {
             id: newId,
@@ -113,7 +112,7 @@ function createFileAsObs(self, fileName, newId) {
             name: fileName,
             version: version.id
         };
-        
+
         self.createQuery(idOrPath, query, function (err, q) {
             
             if(err) return observer.onError(err);
@@ -144,14 +143,13 @@ function executeQuery(tx, newId) {
 function insertFile(tx) {
     
     return function(fileIdAndVersion) {
-        
+       
         var fileId    = fileIdAndVersion[0],
             versionId = fileIdAndVersion[1],
             insert = {
                 fileId: fileId,
                 versionId: versionId
             };
-        
         return Rx.Observable.create(function(observer) {
             
             FileVersion
@@ -177,7 +175,6 @@ function updateFileVersion(tx) {
             version   = { version: versionId };
         
         return Rx.Observable.create(function(observer) {
-            
             File
                 .whereUpdate(file, version)
                 .execWithin(tx, function(err) {
@@ -200,7 +197,6 @@ function commitDBAction(tx) {
         // next message and let the subscriber apply
         // them to the done callback.
         tx.commit(function() {
-            
             observer.onNext(arguments);
             observer.onCompleted();
         });
