@@ -1,6 +1,6 @@
 var genny = require('genny');
 
-module.exports = genny.fn(function* upload(resume, stream, idOrPath, tag) {
+module.exports = genny.fn(function* upload(stream, idOrPath, tag, resume) {
     var blob = blobManager.create(account);
     var tx = db.begin();
     try {
