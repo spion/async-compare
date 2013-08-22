@@ -1,3 +1,3 @@
 module.exports = function upload(stream, idOrPath, tag, done) {
-    done();
+    setTimeout(done, 1);
 };
