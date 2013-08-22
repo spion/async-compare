@@ -1,11 +1,12 @@
-var co = require("co")
+var co = require("co");
+
 require('../lib/fakesC');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     var tx = db.begin();
     co(function* upload() {
         var blob = blobManager.create(account)
-        var file = yield self.byUuidOrPath(idOrPath).get;
+        var file = yield self.byUuidOrPath(idOrPath).get();
         var blobId = yield blob.put(stream);
         var previousId = file ? file.version : null
         var version = {
@@ -33,7 +34,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
             .execWithin(tx);
         yield File.whereUpdate({ id: file.id }, { version: version.id })
             .execWithin(tx);
-        yield tx.commit;
+        yield tx.commit();
     })(function(err) {
         if (err) tx.rollback()
         done(err);
