@@ -1,4 +1,5 @@
 var suspend= require('suspend');
+require('../lib/fakes');
 
 module.exports = suspend(function* upload(stream, idOrPath, tag, done, resume) {
     var blob = blobManager.create(account);

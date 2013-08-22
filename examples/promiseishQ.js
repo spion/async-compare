@@ -2,11 +2,13 @@ global.useQ = true;
 
 var q = require('q');
 
+require('../lib/fakesP');
+
 module.exports = function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);
     var tx = db.begin();
-    var blobIdP = blob.putP(stream); 
-    var fileP = self.byUuidOrPath(idOrPath).getP();
+    var blobIdP = blob.put(stream); 
+    var fileP = self.byUuidOrPath(idOrPath).get();
     var version, fileId, file;
     q.spread([blobIdP, fileP], function(blobId, fileV) {        
         file = fileV;
@@ -19,19 +21,19 @@ module.exports = function upload(stream, idOrPath, tag, done) {
             previousId: previousId,
         };
         version.id = Version.createHash(version);
-        return Version.insert(version).execWithinP(tx);
+        return Version.insert(version).execWithin(tx);
     }).then(function() {
         if (!file) {
             var splitPath = idOrPath.split('/');
             var fileName = splitPath[splitPath.length - 1];
             var newId = uuid.v1();
-            return self.createQueryP(idOrPath, {
+            return self.createQuery(idOrPath, {
                 id: newId,
                 userAccountId: userAccount.id,
                 name: fileName,
                 version: version.id
             }).then(function(q) {
-                return q.execWithinP(tx);
+                return q.execWithin(tx);
             }).then(function() {
                 return newId;
             });
@@ -43,10 +45,10 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         return FileVersion.insert({
             fileId: fileId,
             versionId: version.id
-        }).execWithinP(tx);
+        }).execWithin(tx);
     }).then(function() {
         return File.whereUpdate({id: fileId}, {version: version.id})
-            .execWithinP(tx);
+            .execWithin(tx);
     }).then(function() {
         tx.commit();
         return done();

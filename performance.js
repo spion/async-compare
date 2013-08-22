@@ -19,7 +19,6 @@ var perf = module.exports = function(args, done) {
         = args.longStackSupport || false;
 
     var fn = require(args.file);
-    require('./lib/fakes.js');
 
     var start = Date.now();
 

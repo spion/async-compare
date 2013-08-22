@@ -1,4 +1,5 @@
 var catcher = require('../lib/catcher');
+require('../lib/fakes');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);

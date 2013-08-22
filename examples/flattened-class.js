@@ -1,3 +1,5 @@
+require('../lib/fakes');
+
 module.exports = function upload(stream, idOrPath, tag, done) {
     new Uploader(stream, idOrPath, tag, done).run();
 }
@@ -7,28 +9,31 @@ function Uploader(stream, idOrPath, tag, done) {
     this.idOrPath = idOrPath;
     this.tag = tag;
     this.done = done;
+    this.file = null;
+    this.version = null;
+    this.blobId = null;
 }
 
-Uploader.prototype.backoff = function(err) {
+Uploader.prototype.backoff = function backoff (err) {
     this.tx.rollback();
     return done(err);
 }
 
 
-Uploader.prototype.run = function () {
+Uploader.prototype.run = function run () {
     var blob = blobManager.create(account);
     this.tx = db.begin();
     blob.put(this.stream, this.afterBlobWritten.bind(this));
 }
 
-Uploader.prototype.afterBlobWritten = function (err, blobId) { 
+Uploader.prototype.afterBlobWritten = function afterBlobWritten(err, blobId) { 
     if (err) return this.done(err);
     this.blobId = blobId;
     self.byUuidOrPath(this.idOrPath)
         .get(this.afterFileFetched.bind(this));
 }
 
-Uploader.prototype.afterFileFetched = function(err, file) {
+Uploader.prototype.afterFileFetched = function afterFileFetched(err, file) {
     if (err) return this.done(err);
     this.file = file;
 
@@ -49,7 +54,7 @@ Uploader.prototype.afterFileFetched = function(err, file) {
         this.tx, this.afterVersionInserted.bind(this));
 }
 
-Uploader.prototype.afterVersionInserted = function(err) { 
+Uploader.prototype.afterVersionInserted = function afterVersionInserted(err) { 
     if (err) return this.backoff(err);
     if (!this.file) {
         var splitPath = this.idOrPath.split('/');
@@ -67,12 +72,12 @@ Uploader.prototype.afterVersionInserted = function(err) {
     else return afterFileExists();
 }
 
-Uploader.prototype.afterQueryCreated = function(err, q) {
+Uploader.prototype.afterQueryCreated = function afterQueryCreated(err, q) {
     if (err) return this.backoff(err);
     q.execWithin(this.tx, this.afterFileExists.bind(this));
 }
 
-Uploader.prototype.afterFileExists = function(err) {
+Uploader.prototype.afterFileExists = function afterFileExists(err) {
 
     if (err) return this.backoff(err);
 
@@ -80,13 +85,13 @@ Uploader.prototype.afterFileExists = function(err) {
         .execWithin(this.tx, this.afterFileVersionInserted.bind(this));
 }
 
-Uploader.prototype.afterFileVersionInserted = function(err) {
+Uploader.prototype.afterFileVersionInserted = function afterFileVersionInserted(err) {
     if (err) return this.backoff(err);
     File.whereUpdate({id: this.file.id}, { version: this.version.id })
         .execWithin(this.tx, this.afterFileUpdated.bind(this));
 }
 
-Uploader.prototype.afterFileUpdated = function(err) {
+Uploader.prototype.afterFileUpdated = function afterFileUpdated(err) {
     if (err) return this.backoff(err);
     this.tx.commit(this.done);
 }

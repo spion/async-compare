@@ -1,4 +1,5 @@
 var fibrous = require('fibrous');
+require('../lib/fakes');
 
 module.exports = fibrous(function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);

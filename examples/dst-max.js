@@ -1,3 +1,3 @@
 module.exports = function upload(stream, idOrPath, tag, done) {
-    setTimeout(done, 1);
+    FileVersion.insert(null).execWithin(null, done);
 };

@@ -1,11 +1,12 @@
 var co = require("co")
+require('../lib/fakesC');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     var tx = db.begin();
     co(function* upload() {
         var blob = blobManager.create(account)
         var file = yield self.byUuidOrPath(idOrPath).get;
-        var blobId = yield blob.putC(stream);
+        var blobId = yield blob.put(stream);
         var previousId = file ? file.version : null
         var version = {
             userAccountId: userAccount.id,
@@ -15,7 +16,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
             previousId: previousId
         }
         version.id = Version.createHash(version)
-        yield Version.insert(version).execWithinC(tx);
+        yield Version.insert(version).execWithin(tx);
         if (!file) {
             var splitPath = idOrPath.split("/")
             var fileName = splitPath[splitPath.length - 1]
@@ -25,13 +26,13 @@ module.exports = function upload(stream, idOrPath, tag, done) {
                 name: fileName,
                 version: version.id
             };
-            var query = yield self.createQueryC(idOrPath, file);
-            yield query.execWithinC(tx)
+            var query = yield self.createQuery(idOrPath, file);
+            yield query.execWithin(tx)
         } 
         yield FileVersion.insert({ fileId: file.id, versionId: version.id })
-            .execWithinC(tx);
+            .execWithin(tx);
         yield File.whereUpdate({ id: file.id }, { version: version.id })
-            .execWithinC(tx);
+            .execWithin(tx);
         yield tx.commit;
     })(function(err) {
         if (err) tx.rollback()

@@ -1,5 +1,7 @@
 var Rx = require('rx');
 
+require('../lib/fakes');
+
 module.exports = function upload(stream, idOrPath, tag, done) {
     
     var blob = blobManager.create(account),

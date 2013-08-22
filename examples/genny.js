@@ -1,4 +1,5 @@
 var genny = require('genny');
+require('../lib/fakes');
 
 module.exports = genny.fn(function* upload(stream, idOrPath, tag, resume) {
     var blob = blobManager.create(account);

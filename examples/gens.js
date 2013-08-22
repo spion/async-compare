@@ -1,4 +1,5 @@
 var async = require("gens");
+require('../lib/fakes');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     var tx = db.begin()

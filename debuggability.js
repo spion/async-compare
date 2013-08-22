@@ -11,7 +11,6 @@ var perf = module.exports = function(args, done) {
     global.testError = args.error;
 
     var fn = require(args.file);
-    require('./lib/fakes.js');
     fn('a','b','c', done);
 }
 
