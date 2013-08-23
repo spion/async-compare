@@ -50,13 +50,19 @@ operations.
 
 Performance is measured by performance.js
  
-    node performance.js --n <parallel> --t <miliseconds> ./examples/*.js
+    node performance.js --n <parallel> --t <miliseconds> ./examples/*.js --harmony
 
 where `n` is the number of parallel executions of the method, while `t` is the
-time each simulated I/O operation should take.
+time each simulated I/O operation should take, and `--harmony` enables
+all features hidden behind the v8 flag.
 
 There is an optional parameter `--file <file>` which will only test a single
-file and report any encountered errors in detail.
+file and report any encountered errors in detail:
+
+    node --harmony performance.js --n 10000 --t 10 --file ./examples/genny.js
+
+Also, this variant doesn't spawn a new process so which means additional
+(v8) options can be passed to node.
 
 If you omit `--n`, tests will be made with 100, 500, 1000 and 2000 parallel
 requests and a giant JSON report will be generated.
