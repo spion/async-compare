@@ -4,9 +4,7 @@
   "description": "Compare the performance and code of multiple async patterns",
   "main": "perf.js",
   "dependencies": {
-    "fibby": "~0.1.2",
     "genny": "~0.2.5",
-    "fibrous": "~0.3.2",
     "optimist": "~0.6.0",
     "traceur": "~0.0.3",
     "when": "~2.2.1",
@@ -14,7 +12,6 @@
     "async": "~0.2.9",
     "text-table": "~0.1.1",
     "streamline": "~0.6.0",
-    "fibers": "~1.0.1",
     "long-stack-traces": "~0.1.2",
     "q": "~0.9.6",
     "galaxy-stack": "~0.1.0",
