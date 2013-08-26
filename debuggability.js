@@ -20,7 +20,7 @@ if (args.file) {
         if (err) { 
             //throw err; 
             console.log(err);
-            console.error(err.stack);
+            console.error(new Error(err.stack).stack);
         }
     });
 } else {

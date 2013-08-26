@@ -4,10 +4,6 @@ var async = require('async');
 module.exports = function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);
     var tx = db.begin();
-    function backoff(err) {
-        tx.rollback();
-        return done(new Error(err));
-    }
     var blobId, file, version, fileId;
     async.waterfall([
         function writeBlob(callback) {
@@ -69,7 +65,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         }
     ],
     function (err) {
-        if (err) return backoff(err);
-        done();
+        if (err) tx.rollback();
+        done(new Error(err));
     });
 }

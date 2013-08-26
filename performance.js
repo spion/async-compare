@@ -15,8 +15,10 @@ var perf = module.exports = function(args, done) {
 
     global.asyncTime = args.t;
 
-    global.longStackSupport = require('q').longStackSupport 
-        = args.longStackSupport || false;
+    if (args.longStackSupport) {
+        global.longStackSupport = require('q').longStackSupport 
+            = args.longStackSupport || false;
+    }
 
     var fn = require(args.file);
 

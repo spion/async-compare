@@ -6,7 +6,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
     var tx = db.begin();
     function backoff(err) {
         tx.rollback();
-        return done(new Error(err));
+        return done(err);
     }
     blob.put(stream, function (err, blobId) {
         if (err) return done(err);

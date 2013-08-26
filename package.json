@@ -4,7 +4,6 @@
   "description": "Compare the performance and code of multiple async patterns",
   "main": "perf.js",
   "dependencies": {
-    "genny": "~0.2.5",
     "optimist": "~0.6.0",
     "when": "~2.2.1",
     "esprima": "~1.0.3",
@@ -18,7 +17,8 @@
     "co": "~1.5.1",
     "rx": "~2.1.10",
     "source-map-support": "~0.2.3",
-    "traceur": "0.0.4"
+    "traceur": "0.0.4",
+    "genny": "~0.5.0"
   },
   "devDependencies": {},
   "scripts": {

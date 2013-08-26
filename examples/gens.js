@@ -5,7 +5,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
     var tx = db.begin()
     uploadTransaction(tx, stream, idOrPath, tag, function (err) {
         if (err) tx.rollback()
-        done.apply(this, arguments)
+        done(err);
     })
 }
 

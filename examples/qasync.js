@@ -1,7 +1,6 @@
 global.useQ = true;
-var q = require('q');
-
 require('../lib/fakesP');
+var q = require('q');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     q.spawn(function* () {

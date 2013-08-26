@@ -1,11 +1,10 @@
 var co = require("co");
-
 require('../lib/fakesC');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     var tx = db.begin();
+    var blob = blobManager.create(account)
     co(function* upload() {
-        var blob = blobManager.create(account)
         var file = yield self.byUuidOrPath(idOrPath).get();
         var blobId = yield blob.put(stream);
         var previousId = file ? file.version : null
