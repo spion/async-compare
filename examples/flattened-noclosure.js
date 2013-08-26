@@ -10,7 +10,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
 
 function backoff(err, tx) {
     tx.rollback();
-    return done(new Error(err));
+    return done(err);
 }
 function afterBlobWritten(tx, idOrPath, tag, done) { 
     return function (err, iBlobId) {
