@@ -10,8 +10,10 @@ var perf = module.exports = function(args, done) {
     global.testThrowAsync = args.athrow;
     global.testError = args.error;
 
-    var fn = require(args.file);
-    fn('a','b','c', done);
+    require('./loader').require(args.file, function(err, fn) {
+        if(err) done(err);
+        else fn('a','b','c', done);
+    });
 }
 
 
@@ -20,7 +22,8 @@ if (args.file) {
         if (err) { 
             //throw err; 
             console.log(err);
-            console.error(new Error(err.stack).stack);
+            var stack = err.__oni_stack ? String(err) : new Error(err.stack).stack;
+            console.error(stack);
         }
     });
 } else {
@@ -81,9 +84,11 @@ if (args.file) {
             r.data = r.data.join('').split('\n').filter(function(line) {
                 return line.match('examples/' + f)
             }).map(function(l) {
+                var reportedLine = l.match(/:(\d+)/);
+                var reportedLine = reportedLine && reportedLine[1];
                 return {content: l, 
-                    line: l.split(':')[1],
-                    distance: Math.abs(l.split(':')[1] - r.line)};
+                    line: reportedLine,
+                    distance: Math.abs(reportedLine - r.line)};
             }).sort(function(l1, l2) {
                 return l1.distance - l2.distance;
             })[0];
