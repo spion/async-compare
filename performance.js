@@ -94,7 +94,7 @@ if (args.file) {
     else
         async.mapSeries([100,500,1000,1500,2000], function(n, done) {
             console.log("--- n =", n, "---");
-            measure(files, n, args.t != null ? args.t : n * args.nt, function(err, res) {
+            measure(files, n, args.t != null ? args.t : n * args.dt, function(err, res) {
                 return done(null, {n: n, res: res});
             });
         }, function(err, all) {
