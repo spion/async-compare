@@ -65,10 +65,14 @@ Also, this variant doesn't spawn a new process so which means additional
 (v8) options can be passed to node.
 
 If you omit `--n`, tests will be made with 100, 500, 1000 and 2000 parallel
-requests and a giant JSON report will be generated.
+requests and a giant JSON report (suitable for charts) will be generated.
+    
+    node performance.js --t 1 ./examples/*.js --harmony
 
 If you omit `--n` *and* replace `--t` with `--dt`, I/O time `t` will grow with 
-`n` by the formula `t = n * dt`;
+`n` by the formula `t = n * dt`
+
+    node performance.js --dt 0.1 ./examples/*.js --harmony
 
 Execution time and peak memory usage are reported.
 
