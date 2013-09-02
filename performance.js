@@ -20,31 +20,37 @@ var perf = module.exports = function(args, done) {
             = args.longStackSupport || false;
     }
 
-    var fn = require(args.file);
+    require('./loader').require(args.file, function(err, fn) {
+        if(err) done(err);
+        else run(fn);
+    });
 
-    var start = Date.now();
+    function run(fn) {
+        var start = Date.now();
 
-    var memStart = process.memoryUsage().rss;
-    for (var k = 0, kn = args.n; k < kn; ++k)
-        fn('a','b','c', cb);
+        var memStart = process.memoryUsage().rss;
+        for (var k = 0, kn = args.n; k < kn; ++k)
+            fn('a','b','c', cb);
 
-    var memMax = process.memoryUsage().rss;
+        var memMax = process.memoryUsage().rss;
 
-    function cb (err) {
-        if (err) {
-            ++errs;
-            lastErr = err;
+        function cb (err) {
+            if (err) {
+                ++errs;
+                lastErr = err;
+            }
+            memMax = Math.max(memMax, process.memoryUsage().rss);
+            if (!--times) { 
+                done(null, {
+                    time: Date.now() - start, 
+                    mem: (memMax - memStart)/1024/1024,
+                    errors: errs, 
+                    lastErr: lastErr ? lastErr.stack : null
+                });
+            }
         }
-        memMax = Math.max(memMax, process.memoryUsage().rss);
-        if (!--times) { 
-            done(null, {
-                time: Date.now() - start, 
-                mem: (memMax - memStart)/1024/1024,
-                errors: errs, 
-                lastErr: lastErr ? lastErr.stack : null
-            });
-        }
-    }
+
+    };
 }
 
 
