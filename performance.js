@@ -17,7 +17,7 @@ var perf = module.exports = function(args, done) {
 
     if (args.longStackSupport) {
         global.longStackSupport = require('q').longStackSupport 
-            = args.longStackSupport || false;
+            = args.longStackSupport;
     }
 
     var fn = require(args.file);
