@@ -20,7 +20,9 @@ if (args.file) {
         if (err) { 
             //throw err; 
             console.log(err);
-            console.error(new Error(err.stack).stack);
+            // for browser-compatibility, stratifiedjs reports errors
+            // on __oni_stack (or toString()), rather than 'stack'.
+            console.error(err.__oni_stack ? err.__oni_stack.map(function(x) { return x.join(':') }).join('\n') : new Error(err.stack).stack);
         }
     });
 } else {
@@ -79,8 +81,9 @@ if (args.file) {
         p.stderr.on('data', function(d) { r.data.push(d.toString()); });
         p.stderr.on('end', function(code) {
             r.data = r.data.join('').split('\n').filter(function(line) {
-                return line.match('examples/' + f)
-            }).map(function(l) {
+                // match lines reporting either compiled or source files: 
+                return line.match('examples/' + f) || line.match('examples/' + sourceOf(f))
+            }).map(function(l) { 
                 return {content: l, 
                     line: l.split(':')[1],
                     distance: Math.abs(l.split(':')[1] - r.line)};
