@@ -18,7 +18,8 @@
     "rx": "~2.1.10",
     "source-map-support": "~0.2.3",
     "traceur": "0.0.4",
-    "genny": "~0.5.0"
+    "genny": "~0.5.0",
+    "stratifiedjs": "~0.14.0"
   },
   "devDependencies": {},
   "scripts": {
