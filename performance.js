@@ -24,11 +24,24 @@ var perf = module.exports = function(args, done) {
 
     var start = Date.now();
 
-    var memStart = process.memoryUsage().rss;
-    for (var k = 0, kn = args.n; k < kn; ++k)
-        fn('a','b','c', cb);
 
-    var memMax = process.memoryUsage().rss;
+    var warmedUp = 0;
+    var tot =  Math.min( 350, times );
+    for (var k = 0, kn = tot; k < kn; ++k)
+        fn('a','b','c', warmup);
+
+    var memMax; var memStart; var start;
+    function warmup() {
+        warmedUp++
+        if( warmedUp === tot ) {
+            start = Date.now();
+
+            memStart = process.memoryUsage().rss;
+            for (var k = 0, kn = args.n; k < kn; ++k)
+                fn('a','b','c', cb);
+            memMax = process.memoryUsage().rss;
+        }
+    }
 
     function cb (err) {
         if (err) {
@@ -82,9 +95,11 @@ if (args.file) {
             });
             console.log("");
             res = res.map(function(r) { 
+                var failText = 'N/A';
+                if (r.data.timeout) failText = 'T/O';
                 return [path.basename(r.file), 
-                    r.data.mem != null ? r.data.time: 'N/A', 
-                    r.data.mem != null ? r.data.mem.toFixed(2) : 'N/A']
+                    r.data.mem != null ? r.data.time: failText, 
+                    r.data.mem != null ? r.data.mem.toFixed(2) : failText]
             });
 
             res = [['file', 'time(ms)', 'memory(MB)']].concat(res)
@@ -138,15 +153,23 @@ function measure(files, requests, time, callback) {
 
         var p = cp.spawn(process.execPath, argsFork);
 
+        var complete = false, timedout = false;
+        if (args.timeout) setTimeout(function() {
+            if (complete) return;
+            timedout = true;
+            p.kill();
+        }, args.timeout);
+
         var r = { file: f, data: [] };
         p.stdout.on('data', function(d) { r.data.push(d.toString()); });
         p.stdout.pipe(process.stdout);
         p.stdout.on('end', function(code) {
+            complete = true;
             try {
                 r.data = JSON.parse(r.data.join(''));
             } catch(e) {
                 r.data = {time: Number.POSITIVE_INFINITY, mem: null, 
-                    missing: true};
+                    missing: true, timeout: timedout};
             }
             done(null, r);
         });
