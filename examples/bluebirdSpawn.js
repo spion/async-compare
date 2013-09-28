@@ -10,6 +10,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
             var tx = db.begin();
             var blobId = yield blob.put(stream);
             var file = yield self.byUuidOrPath(idOrPath).get();
+
             var previousId = file ? file.version : null;
             version = {
                 userAccountId: userAccount.id,
