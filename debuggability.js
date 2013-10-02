@@ -5,6 +5,8 @@ var args = require('optimist').argv;
 global.longStackSupport = require('q').longStackSupport = true;
 require("bluebird").longStackTraces();
 
+var path = require('path');
+
 var perf = module.exports = function(args, done) {
     global.asyncTime = args.t || 1;
     global.testThrow = args.throw;
@@ -19,8 +21,6 @@ var perf = module.exports = function(args, done) {
 if (args.file) {
     perf(args, function(err) {
         if (err) {
-            //throw err;
-            //console.log(err);
             // for browser-compatibility, stratifiedjs reports errors
             // on __oni_stack (or toString()), rather than 'stack'.
 
@@ -39,7 +39,7 @@ if (args.file) {
     var cp    = require('child_process')
     var async = require('async');
     var fs    = require('fs');
-    var dir = __dirname + '/examples';
+    var dir   = path.join(__dirname, 'examples');
 
     var table = require('text-table');
 
@@ -66,7 +66,7 @@ if (args.file) {
         console.error("testing", f);
 
         var argsFork = [__filename,
-            '--file', dir + '/' + f];
+            '--file', path.join(dir, f)];
         if (args.error) argsFork.push('--error')
         if (args.throw) argsFork.push('--throw');
         if (args.athrow) argsFork.push('--athrow');
@@ -79,7 +79,7 @@ if (args.file) {
         var lineNumber = -1;
 
         (function(){
-            var lines = fs.readFileSync(dir + '/' + sourceOf(f), 'utf8').split('\n');
+            var lines = fs.readFileSync(path.join(dir, sourceOf(f)), 'utf8').split('\n');
             var sawFileVersionInsert = false;
             for (var i = 0, len = lines.length; i < len; ++i) {
                 var item = lines[i];
@@ -147,7 +147,6 @@ if (args.file) {
             return [r.file, r.line,
                 r.data ? r.data.line : '-',
                 r.data ? r.data.distance : '-'];
-                //r.data ? 'yes ' + r.data.content :'no'];
         })
         res = [['file', 'actual-line', 'rep-line', 'distance']].concat(res)
         console.log(table(res, {align: ['l','r','r','r']}));
