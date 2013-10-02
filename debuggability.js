@@ -106,12 +106,16 @@ if (args.file) {
         p.stderr.on('end', function(code) {
             r.data = r.data.join('').split('\n').filter(function(line) {
                 // match lines reporting either compiled or source files:
-                return line.indexOf('examples' + separator + f) >= 0 ||
-                    line.indexOf('examples' + separator + sourceOf(f)) >= 0
+                return line.indexOf('examples\\' + f) >= 0 ||
+                    line.indexOf('examples\\' + sourceOf(f)) >= 0 ||
+                    line.indexOf('examples/' + f) >= 0 ||
+                    line.indexOf('examples/' + sourceOf(f)) >= 0
+
             }).map(function(l) {
                 //Windows dirs has colons in drives like "C:\"
                 //so splitting on colon doesn't work :P
                 var rlineno = /(?:\.js|\.sjs|\._js):(\d+)/;
+
                 var line = rlineno.exec(l)[1];
                 return {
                     content: l,
