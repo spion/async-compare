@@ -111,7 +111,7 @@ if (args.file) {
             }).map(function(l) {
                 //Windows dirs has colons in drives like "C:\"
                 //so splitting on colon doesn't work :P
-                var rlineno = /:(\d+):(\d+)[^:]*$/;
+                var rlineno = /(?:\.js|\.sjs|\._js):(\d+)/;
                 var line = rlineno.exec(l)[1];
                 return {
                     content: l,
