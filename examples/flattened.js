@@ -1,4 +1,5 @@
 require('../lib/fakes');
+global.callbackBased = true;
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);
