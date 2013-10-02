@@ -1,4 +1,4 @@
-
+global.callbackBased = true;
 require('../lib/fakes');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
