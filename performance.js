@@ -18,6 +18,7 @@ var perf = module.exports = function(args, done) {
     if (args.longStackSupport) {
         global.longStackSupport = require('q').longStackSupport 
             = args.longStackSupport;
+        require('bluebird').longStackTraces();
     }
 
     var fn = require(args.file);
@@ -150,6 +151,7 @@ function measure(files, requests, time, callback) {
             '--t', time, 
             '--file', f];
         if (args.harmony) argsFork.unshift('--harmony');
+        if (args.longStackSupport) argsFork.push('--longStackSupport');
 
         var p = cp.spawn(process.execPath, argsFork);
 
