@@ -1,5 +1,4 @@
 require('../lib/fakes');
-global.callbackBased = true;
 function bind(f, ctx) {
     return function bound() {
         return f.apply(ctx, arguments);

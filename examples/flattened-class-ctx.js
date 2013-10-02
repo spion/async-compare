@@ -1,5 +1,4 @@
 require('../lib/fakes-ctx');
-global.callbackBased = true;
 
 
 module.exports = function upload(stream, idOrPath, tag, done) {
