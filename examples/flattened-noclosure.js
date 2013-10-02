@@ -1,4 +1,4 @@
-
+global.callbackBased = true;
 require('../lib/fakes');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
@@ -12,7 +12,7 @@ function backoff(err, tx) {
     tx.rollback();
     return done(err);
 }
-function afterBlobWritten(tx, idOrPath, tag, done) { 
+function afterBlobWritten(tx, idOrPath, tag, done) {
     return function (err, iBlobId) {
         if (err) return done(err);
         blobId = iBlobId;
@@ -20,7 +20,7 @@ function afterBlobWritten(tx, idOrPath, tag, done) {
     }
 }
 
-function afterFileFetched(tx, idOrPath, tag, done) { 
+function afterFileFetched(tx, idOrPath, tag, done) {
     return function(err, file) {
         if (err) return done(err);
         var previousId = file ? file.version : null;
@@ -40,7 +40,7 @@ function afterFileFetched(tx, idOrPath, tag, done) {
             tx, afterVersionInserted(tx, file, version, idOrPath, done));
     }
 }
-function afterVersionInserted(tx, file, version, idOrPath, done) { 
+function afterVersionInserted(tx, file, version, idOrPath, done) {
     return function (err) {
         if (err) return backoff(err, tx);
         if (!file) {
