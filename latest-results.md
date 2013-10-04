@@ -15,7 +15,7 @@ promises-bluebird-generator.js                   376       41.86
 dst-streamline.js                                454       46.91
 callbacks-generator-suspend.js                   472       45.25
 promises-bluebird.js                             518       57.12
-thunks-gens.js                                   548       40.28
+thunks-generator-gens.js                         548       40.28
 promises-compose-bluebird.js                     732       72.94
 thunks-generator-co.js                           743       47.93
 callbacks-generator-genny.js                     813       67.72
