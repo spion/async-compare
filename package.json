@@ -20,7 +20,8 @@
     "genny": "~0.5.0",
     "stratifiedjs": "~0.14.0",
     "bluebird": "~0.7.1-4",
-    "q": "~0.9.7"
+    "q": "~0.9.7",
+    "kew": "~0.2.2"
   },
   "devDependencies": {},
   "scripts": {
