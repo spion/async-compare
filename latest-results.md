@@ -28,7 +28,7 @@ promises-kew.js                     1580      103.32
 dst-stratifiedjs.js                 2414      148.85
 rx.js                               2439      266.50
 promises-when.js                    9357      281.92
-qasync.js                          27008      896.98
+promises-q-generator.js            27008      896.98
 promises-q.js                      28198      708.88
 promises-compose-q.js              63019      807.08
 dst-qasync-traceur.js              84992      669.65
