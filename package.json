@@ -21,7 +21,8 @@
     "stratifiedjs": "~0.14.0",
     "bluebird": "~0.7.9-1",
     "q": "~0.9.7",
-    "kew": "~0.2.2"
+    "kew": "~0.2.2",
+    "deferred-queue": "~0.3.0"
   },
   "devDependencies": {},
   "scripts": {
