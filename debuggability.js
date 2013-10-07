@@ -55,6 +55,7 @@ if (args.file) {
     });
 
     var sourceOf = function(f) {
+        if (!/^dst-/.test(f)) return f;        
         var name = f.replace(/^dst-/, '').replace(/-[^-]+.js$/, '');
         return sources.filter(function(s) {
             return s.indexOf(name) >= 0;
