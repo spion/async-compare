@@ -86,6 +86,12 @@ if (args.file) {
                 if (!sawFileVersionInsert) {
                     if (item.indexOf('FileVersion.insert') >= 0) {
                         sawFileVersionInsert = true;
+                        //The .execWithin could be on the same line
+                        if (item.indexOf('execWithin') >
+                            item.indexOf('FileVersion.insert')) {
+                            lineNumber = i + 1;
+                            break;
+                        }
                     }
                 }
                 else {
@@ -96,7 +102,7 @@ if (args.file) {
                 }
             }
             if (lineNumber < 0) {
-                throw new Error("Example didn't contain throwing line: " 
+                throw new Error("Example didn't contain throwing line: "
                                 + sourceOf(f));
             }
         })();
@@ -140,16 +146,19 @@ if (args.file) {
         console.log("error reporting");
         console.log("");
         res = res.sort(function(r1, r2) {
-            var ret = parseFloat(r1.data ? r1.data.distance : Infinity)
-                - parseFloat(r2.data ? r2.data.distance : Infinity);
+            if (r1.crashed === r2.crashed) {
+                var ret = parseFloat(r1.data ? r1.data.distance : Infinity)
+                    - parseFloat(r2.data ? r2.data.distance : Infinity);
 
-            if( ret === 0 ) {
-                return r1.file < r2.file ? -1 :
-                       r1.file > r2.file ? 1 :
-                       0;
+                if (ret === 0) {
+                    return r1.file < r2.file ? -1 :
+                           r1.file > r2.file ? 1 :
+                           0;
 
+                }
+                return ret;
             }
-            return ret;
+            return r1.crashed - r2.crashed;
         });
         res = res.map(function(r) {
             return [r.file, r.line,
