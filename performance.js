@@ -119,8 +119,9 @@ if (args.file) {
             printPlatform();
 
         });
-    else
-        async.mapSeries([100,500,1000,1500,2000], function(n, done) {
+    else {
+        var measurements = (args.ns || '100,500,1000,1500,2000').split(',');
+        async.mapSeries(measurements, function(n, done) {
             console.log("--- n =", n, "---");
             measure(files, n, args.t != null ? args.t : n * args.dt, function(err, res) {
                 return done(null, {n: n, res: res});
@@ -151,6 +152,7 @@ if (args.file) {
             console.log("--------- mem ----------");
             console.log(util.inspect(mems,  false, 10))
         })
+    }
 }
 
 
