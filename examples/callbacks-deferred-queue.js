@@ -65,7 +65,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
                 .execWithin(tx, callback);
         })
         .push (function afterFileUpdated(callback) {
-            tx.commit(callback);
-            done ();
-        });
+          tx.commit(callback);
+        })
+        .push (done);
 }
