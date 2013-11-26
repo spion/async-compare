@@ -1,6 +1,5 @@
-global.useQ = true;
-require('../lib/fakesP');
 var q = require('q');
+require('../lib/fakesP')(q.denodeify);
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     q.spawn(function* () {

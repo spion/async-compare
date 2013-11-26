@@ -1,10 +1,7 @@
-global.useBluebird = true;
-global.useQ = false;
-
 var q = require('bluebird'), 
     fn = require('when/function');
    
-require('../lib/fakesP');
+require('../lib/fakesP')(q.promisify);
 
 // Assume Version = objectLift(version), File = objectLift(file) etc.
 module.exports = function upload(stream, idOrPath, tag, done) {

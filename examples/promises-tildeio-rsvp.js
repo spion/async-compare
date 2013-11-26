@@ -1,14 +1,14 @@
-
-var q = require('q');
-require('../lib/fakesP')(q.denodeify);
+var rsvp = require('rsvp');
+require('../lib/fakesP')(rsvp.denodeify);
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);
     var tx = db.begin();
-    var blobIdP = blob.put(stream); 
+    var blobIdP = blob.put(stream);
     var fileP = self.byUuidOrPath(idOrPath).get();
     var version, fileId, file;
-    q.spread([blobIdP, fileP], function(blobId, fileV) {        
+    rsvp.all([blobIdP, fileP]).then(function(all) {
+        var blobId = all[0], fileV = all[1];
         file = fileV;
         var previousId = file ? file.version : null;
         version = {
@@ -25,7 +25,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
             var splitPath = idOrPath.split('/');
             var fileName = splitPath[splitPath.length - 1];
             var newId = uuid.v1();
-            return self.createQuery(idOrPath, {
+            return self.createQueryCtxless(idOrPath, {
                 id: newId,
                 userAccountId: userAccount.id,
                 name: fileName,

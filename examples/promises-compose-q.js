@@ -1,7 +1,7 @@
 var q = require('q'), 
     fn = require('when/function');
    
-require('../lib/fakesP');
+require('../lib/fakesP')(q.denodeify);
 
 // Assume Version = objectLift(version), File = objectLift(file) etc.
 module.exports = function upload(stream, idOrPath, tag, done) {

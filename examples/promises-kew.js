@@ -1,8 +1,5 @@
-global.useKew = true;
-
 var q = require('kew');
-
-require('../lib/fakesP');
+require('../lib/fakesP')(require('../lib/kew-lifter'));
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);

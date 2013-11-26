@@ -1,8 +1,6 @@
-var when = require('when'), 
-    fn = require('when/function'), 
-    p = require('../lib/promiseSupport.js');
+var when = require('when');
+require('../lib/fakesP')(require('when/node/function').lift);
 
-require('../lib/fakesP');
 
 module.exports = function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);

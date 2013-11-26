@@ -1,5 +1,3 @@
-global.useBluebird = true;
-global.useQ = false;
 var bluebird = require('bluebird');
 require('../lib/fakesP-ctx');
 
