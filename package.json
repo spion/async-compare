@@ -24,7 +24,7 @@
     "bluebird": "~0.9.0-0",
     "kew": "~0.2.2",
     "rsvp": "~2.0.4",
-    "p-promise": "rkatic/p"
+    "p-promise": "~0.4.0"
   },
   "devDependencies": {},
   "scripts": {

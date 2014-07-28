@@ -3,6 +3,7 @@ Error.stackTraceLimit = Infinity;
 var args = require('optimist').argv;
 
 global.longStackSupport = require('q').longStackSupport = true;
+require("p-promise").longStackSupport = true;
 require("bluebird").longStackTraces();
 
 var path = require('path');
