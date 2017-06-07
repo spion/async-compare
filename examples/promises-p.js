@@ -2,7 +2,7 @@
 var P = require('p-promise');
 require('../lib/fakesP')(P.denodeify);
 
-module.exports = function upload(stream, idOrPath, tag, done) {
+var the_upload= function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);
     var tx = db.begin();
     var blobIdP = blob.put(stream);
@@ -55,3 +55,5 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         return done(err);
     });
 }
+module.exports =the_upload;
+ 

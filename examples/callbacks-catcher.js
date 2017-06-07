@@ -1,7 +1,7 @@
 var catcher = require('../lib/catcher');
 require('../lib/fakes');
 
-module.exports = function upload(stream, idOrPath, tag, done) {
+var upload= function (stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);
     var tx = db.begin();
     var c = catcher();
@@ -51,3 +51,4 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         return done(err);
     });
 }
+module.exports=upload;

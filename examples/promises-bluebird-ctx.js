@@ -1,14 +1,15 @@
 var bluebird = require('bluebird');
 require('../lib/fakesP-ctx');
 
-module.exports = function upload(stream, idOrPath, tag, done) {
+var the_upload = function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);
     var tx = db.begin();
     var blobIdP = blob.put(stream);
     var fileP = self.byUuidOrPath(idOrPath).get();
     var version, fileId, file;
 
-    bluebird.all([blobIdP, fileP]).spread(function(blobId, fileV) {
+    bluebird.all([blobIdP, fileP]).then(function(results) {
+        var blobId=results[0], fileV=results[1];
         file = fileV;
         var previousId = file ? file.version : null;
         version = {
@@ -55,3 +56,4 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         return done(err);
     });
 }
+module.exports=the_upload;

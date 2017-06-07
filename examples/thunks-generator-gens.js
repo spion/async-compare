@@ -1,7 +1,7 @@
 var async = require("gens");
 require('../lib/fakes');
 
-module.exports = function upload(stream, idOrPath, tag, done) {
+var the_upload = function upload(stream, idOrPath, tag, done) {
     var tx = db.begin()
     uploadTransaction(tx, stream, idOrPath, tag, function (err) {
         if (err) tx.rollback()
@@ -41,3 +41,5 @@ var uploadTransaction = async(function* upload(tx, stream, idOrPath, tag) {
             .execWithin.bind(null, tx);
     yield tx.commit
 });
+
+module.exports=the_upload;

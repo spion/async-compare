@@ -1,7 +1,7 @@
 var bluebird = require('bluebird');
 require('../lib/fakesP')(bluebird.promisify);
 
-module.exports = function upload(stream, idOrPath, tag, done) {
+var the_upload = function upload(stream, idOrPath, tag, done) {
     bluebird.spawn(function* () {
         try {
             var blob = blobManager.create(account);
@@ -42,3 +42,7 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         }
     }).done(done, done);
 }
+
+module.exports=the_upload;
+
+ 
