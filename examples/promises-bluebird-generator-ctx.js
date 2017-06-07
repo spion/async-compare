@@ -1,7 +1,7 @@
 var bluebird = require('bluebird');
 require('../lib/fakesP-ctx');
 
-module.exports = bluebird.coroutine(function* upload(stream, idOrPath, tag, done) {
+var the_upload = bluebird.coroutine(function* upload(stream, idOrPath, tag, done) {
     try {
         var blob = blobManager.create(account);
         var tx = db.begin();
@@ -44,3 +44,7 @@ module.exports = bluebird.coroutine(function* upload(stream, idOrPath, tag, done
         done(err);
     }
 });
+
+module.exports=the_upload;
+
+ 

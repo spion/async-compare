@@ -1,7 +1,7 @@
 var fibrous = require('fibrous');
 require('../lib/fakes');
 
-module.exports = fibrous(function upload(stream, idOrPath, tag, done) {
+var the_upload = fibrous(function upload(stream, idOrPath, tag, done) {
     var blob = blobManager.create(account);
     var tx = db.begin();
     try {
@@ -40,3 +40,5 @@ module.exports = fibrous(function upload(stream, idOrPath, tag, done) {
         throw err;
     }
 });
+module.exports=the_upload;
+ 

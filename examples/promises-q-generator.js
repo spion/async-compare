@@ -1,7 +1,7 @@
 var q = require('q');
 require('../lib/fakesP')(q.denodeify);
 
-module.exports = function upload(stream, idOrPath, tag, done) {
+var the_upload = function upload(stream, idOrPath, tag, done) {
     q.spawn(function* () {
         try {
             var blob = blobManager.create(account);
@@ -42,3 +42,6 @@ module.exports = function upload(stream, idOrPath, tag, done) {
         }
     });
 }
+
+module.exports=the_upload;
+ 

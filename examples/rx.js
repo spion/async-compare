@@ -2,7 +2,7 @@ var Rx = require('rx');
 
 require('../lib/fakes');
 
-module.exports = function upload(stream, idOrPath, tag, done) {
+var the_upload= function upload(stream, idOrPath, tag, done) {
     
     var blob = blobManager.create(account),
         tx = db.begin(),
@@ -203,3 +203,5 @@ function commitDBAction(tx) {
         });
     });
 }
+module.exports =the_upload;
+ 
